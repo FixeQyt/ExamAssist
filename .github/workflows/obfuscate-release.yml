@@ -8,6 +8,9 @@ on:
                 required: false
                 default: 'Automated release'
 
+permissions:
+    contents: write
+
 jobs:
     obfuscate-and-release:
         runs-on: ubuntu-latest
