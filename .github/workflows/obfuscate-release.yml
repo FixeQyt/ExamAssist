@@ -24,8 +24,13 @@ jobs:
               with:
                   node-version: '20'
             
-            - name: Install javascript-obfuscator
-              run: npm install -g javascript-obfuscator
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            
+            - name: Install dependencies
+              run: pnpm install
             
             - name: Read version from manifest
               id: get_version
@@ -34,61 +39,12 @@ jobs:
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
                   echo "📦 Manifest version: $VERSION"
             
-            - name: Create build directory
-              run: mkdir -p build
-            
-            - name: Copy non-JS files
-              run: |
-                  cp manifest.json build/
-                  cp *.html build/ 2>/dev/null || true
-                  cp *.css build/ 2>/dev/null || true
-                  cp *.md build/ 2>/dev/null || true
-                  cp -r icons build/ 2>/dev/null || true
-            
-            - name: Obfuscate JavaScript files
-              run: |
-                  echo "🔒 Obfuscating JavaScript files..."
-                  
-                  for file in *.js; do
-                      if [ -f "$file" ]; then
-                          echo "  → Obfuscating $file"
-                          javascript-obfuscator "$file" \
-                              --output "build/$file" \
-                              --compact true \
-                              --control-flow-flattening false \
-                              --dead-code-injection false \
-                              --debug-protection false \
-                              --disable-console-output false \
-                              --identifier-names-generator hexadecimal \
-                              --identifiers-prefix "_0x" \
-                              --log false \
-                              --numbers-to-expressions false \
-                              --rename-globals false \
-                              --self-defending false \
-                              --simplify true \
-                              --split-strings true \
-                              --split-strings-chunk-length 5 \
-                              --string-array true \
-                              --string-array-calls-transform false \
-                              --string-array-encoding 'base64' \
-                              --string-array-index-shift true \
-                              --string-array-rotate true \
-                              --string-array-shuffle true \
-                              --string-array-wrappers-count 1 \
-                              --string-array-wrappers-chained-calls false \
-                              --string-array-wrappers-parameters-max-count 2 \
-                              --string-array-wrappers-type 'variable' \
-                              --string-array-threshold 0.75 \
-                              --transform-object-keys false \
-                              --unicode-escape-sequence false
-                      fi
-                  done
-                  
-                  echo "✅ Obfuscation complete!"
+            - name: Build and obfuscate
+              run: pnpm build:obfuscate
             
             - name: Create ZIP package
               run: |
-                  cd build
+                  cd dist
                   zip -r ../cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip .
                   cd ..
                   echo "📦 Created: cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"

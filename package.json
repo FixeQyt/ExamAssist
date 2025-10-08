@@ -1,0 +1,14 @@
+{
+	"name": "cbgc-extension",
+	"version": "1.0.0",
+	"description": "Chrome Browser Test Cheat Extension",
+	"type": "module",
+	"scripts": {
+		"build": "node build.js",
+		"build:obfuscate": "node build.js --obfuscate"
+	},
+	"devDependencies": {
+		"esbuild": "^0.25.10",
+		"javascript-obfuscator": "^4.1.1"
+	}
+}
