@@ -55,32 +55,31 @@ jobs:
                           javascript-obfuscator "$file" \
                               --output "build/$file" \
                               --compact true \
-                              --control-flow-flattening true \
-                              --control-flow-flattening-threshold 0.75 \
-                              --dead-code-injection true \
-                              --dead-code-injection-threshold 0.4 \
+                              --control-flow-flattening false \
+                              --dead-code-injection false \
                               --debug-protection false \
                               --disable-console-output false \
                               --identifier-names-generator hexadecimal \
+                              --identifiers-prefix "_0x" \
                               --log false \
-                              --numbers-to-expressions true \
+                              --numbers-to-expressions false \
                               --rename-globals false \
-                              --self-defending true \
+                              --self-defending false \
                               --simplify true \
                               --split-strings true \
-                              --split-strings-chunk-length 10 \
+                              --split-strings-chunk-length 5 \
                               --string-array true \
-                              --string-array-calls-transform true \
+                              --string-array-calls-transform false \
                               --string-array-encoding 'base64' \
                               --string-array-index-shift true \
                               --string-array-rotate true \
                               --string-array-shuffle true \
-                              --string-array-wrappers-count 2 \
-                              --string-array-wrappers-chained-calls true \
-                              --string-array-wrappers-parameters-max-count 4 \
-                              --string-array-wrappers-type 'function' \
+                              --string-array-wrappers-count 1 \
+                              --string-array-wrappers-chained-calls false \
+                              --string-array-wrappers-parameters-max-count 2 \
+                              --string-array-wrappers-type 'variable' \
                               --string-array-threshold 0.75 \
-                              --transform-object-keys true \
+                              --transform-object-keys false \
                               --unicode-escape-sequence false
                       fi
                   done
