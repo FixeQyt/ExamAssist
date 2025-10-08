@@ -1,0 +1,131 @@
+name: Obfuscate & Release
+
+on:
+    workflow_dispatch:
+        inputs:
+            release_notes:
+                description: 'Release notes (optional)'
+                required: false
+                default: 'Automated release'
+
+jobs:
+    obfuscate-and-release:
+        runs-on: ubuntu-latest
+        
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+            
+            - name: Install javascript-obfuscator
+              run: npm install -g javascript-obfuscator
+            
+            - name: Read version from manifest
+              id: get_version
+              run: |
+                  VERSION=$(node -p "require('./manifest.json').version")
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "📦 Manifest version: $VERSION"
+            
+            - name: Create build directory
+              run: mkdir -p build
+            
+            - name: Copy non-JS files
+              run: |
+                  cp manifest.json build/
+                  cp *.html build/ 2>/dev/null || true
+                  cp *.css build/ 2>/dev/null || true
+                  cp *.md build/ 2>/dev/null || true
+                  cp -r icons build/ 2>/dev/null || true
+            
+            - name: Obfuscate JavaScript files
+              run: |
+                  echo "🔒 Obfuscating JavaScript files..."
+                  
+                  for file in *.js; do
+                      if [ -f "$file" ]; then
+                          echo "  → Obfuscating $file"
+                          javascript-obfuscator "$file" \
+                              --output "build/$file" \
+                              --compact true \
+                              --control-flow-flattening true \
+                              --control-flow-flattening-threshold 0.75 \
+                              --dead-code-injection true \
+                              --dead-code-injection-threshold 0.4 \
+                              --debug-protection false \
+                              --disable-console-output false \
+                              --identifier-names-generator hexadecimal \
+                              --log false \
+                              --numbers-to-expressions true \
+                              --rename-globals false \
+                              --self-defending true \
+                              --simplify true \
+                              --split-strings true \
+                              --split-strings-chunk-length 10 \
+                              --string-array true \
+                              --string-array-calls-transform true \
+                              --string-array-encoding 'base64' \
+                              --string-array-index-shift true \
+                              --string-array-rotate true \
+                              --string-array-shuffle true \
+                              --string-array-wrappers-count 2 \
+                              --string-array-wrappers-chained-calls true \
+                              --string-array-wrappers-parameters-max-count 4 \
+                              --string-array-wrappers-type 'function' \
+                              --string-array-threshold 0.75 \
+                              --transform-object-keys true \
+                              --unicode-escape-sequence false
+                      fi
+                  done
+                  
+                  echo "✅ Obfuscation complete!"
+            
+            - name: Create ZIP package
+              run: |
+                  cd build
+                  zip -r ../cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip .
+                  cd ..
+                  echo "📦 Created: cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
+            
+            - name: Generate release notes
+              id: release_notes
+              run: |
+                  cat << EOF > release_notes.md
+                  ## 🚀 Release ${{ steps.get_version.outputs.version }}-${{ github.run_number }}
+                  
+                  ### 📋 Release Information
+                  - **Version:** ${{ steps.get_version.outputs.version }}
+                  - **Build:** ${{ github.run_number }}
+                  - **Date:** $(date +'%Y-%m-%d %H:%M:%S UTC')
+                  - **Commit:** ${{ github.sha }}
+                  
+                  ### 📝 Notes
+                  ${{ github.event.inputs.release_notes }}
+                  
+                  ---
+                  *Automated release from GitHub Actions*
+                  EOF
+                  
+                  cat release_notes.md
+            
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  tag_name: v${{ steps.get_version.outputs.version }}-${{ github.run_number }}
+                  name: Release ${{ steps.get_version.outputs.version }}-${{ github.run_number }}
+                  body_path: release_notes.md
+                  files: cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
+                  draft: false
+                  prerelease: false
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            
+            - name: Success message
+              run: |
+                echo "🎉 Release created successfully!"
+                echo "📦 Package: cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
+                echo "🏷️  Tag: v${{ steps.get_version.outputs.version }}-${{ github.run_number }}"
