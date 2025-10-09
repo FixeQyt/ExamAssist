@@ -365,7 +365,7 @@ function initScreenshotSelector() {
 
 					try {
 						const response = await fetch(
-							"https://text.pollinations.ai/pollinations/v1/chat/completions",
+							"https://text.pollinations.ai/openai/v1/chat/completions",
 							{
 								method: "POST",
 								headers: {
