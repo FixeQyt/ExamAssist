@@ -415,6 +415,12 @@ KRYTYCZNE ZASADY:
 							},
 						);
 
+						if (!response.ok) {
+							throw new Error(
+								`API Error: ${response.status} ${response.statusText}`,
+							);
+						}
+
 						const data = await response.json();
 						const rawContent = data.choices?.[0]?.message?.content || "{}";
 
