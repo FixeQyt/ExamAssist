@@ -28,13 +28,19 @@
             color: #666;
             font-weight: 500;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 14px;
             box-sizing: border-box;
+        }
+        select {
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 20px;
         }
         button {
             margin-top: 20px;
@@ -78,14 +84,24 @@
 </head>
 <body>
     <div class="container">
-        <h1>Ustawienia</h1>
+        <h1 data-i18n="settings">Ustawienia</h1>
         
-        <label for="apiKey">API Key:</label>
-        <input type="password" id="apiKey">
+        <div class="form-group">
+            <label for="language" data-i18n="language">Język</label>
+            <select id="language">
+                <option value="pl" data-i18n="polish">Polski</option>
+                <option value="en" data-i18n="english">Angielski</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="apiKey" data-i18n="apiKey">API Key</label>
+            <input type="password" id="apiKey">
+        </div>
         
         <div style="display: flex; gap: 10px;">
-            <button id="save">Zapisz</button>
-            <button id="delete" style="background: #dc2626;">Usuń</button>
+            <button id="save" data-i18n="save">Zapisz</button>
+            <button id="delete" style="background: #dc2626;" data-i18n="delete">Usuń</button>
         </div>
         
         <div id="status" class="status"></div>

@@ -13,18 +13,12 @@ Screenshot Selector to rozszerzenie Chrome, które pozwala:
 
 ## ✨ Funkcje
 
-### 🎯 Główne funkcje
 - **Zaznaczanie obszaru**: Kliknij ikonę rozszerzenia i zaznacz dowolny obszar na stronie
 - **Analiza AI**: Automatyczna analiza pytań testowych z obrazu
 - **Kopiowanie do schowka**: Obraz jest automatycznie kopiowany do schowka
 - **Tryby odpowiedzi**: Rozpoznawanie różnych typów pytań (text/select_one/multi_select)
-- **Polski język**: Wszystkie odpowiedzi w języku polskim
-
-### 🔧 Funkcje techniczne
-- **Obfuskacja kodu**: Opcjonalna obfuskacja kodu JavaScript (`--obfuscate`)
+- **Wielojęzyczność**: Wsparcie dla języka polskiego i angielskiego
 - **Bypass zabezpieczeń**: Omijanie zabezpieczeń testportal.pl
-- **Content Script Injection**: Wstrzykiwanie skryptów w kontekście strony
-- **Storage API**: Bezpieczne przechowywanie klucza API
 
 ## 🚀 Instalacja
 
@@ -64,9 +58,9 @@ npm run build:obfuscate
 
 ### API Key (Pollinations)
 
-1. Kliknij ikonę rozszerzenia
-2. Kliknij prawym przyciskiem myszy i wybierz "Opcje"
-3. Wpisz swój klucz API Pollinations
+1. Kliknij ikonę rozszerzenia prawym przyciskiem myszy i wybierz "Opcje"
+2. Wpisz swój klucz API Pollinations
+3. Wybierz preferowany język interfejsu (polski/angielski)
 4. Kliknij "Zapisz"
 
 **Uwaga**: Bez klucza API, rozszerzenie będzie tylko kopiować obrazy do schowka bez analizy AI.
@@ -148,15 +142,6 @@ npm run build:obfuscate
   - `storage`: Przechowywanie klucza API
 - **Host Permissions**: Dostęp tylko do testportal.pl/net i API Pollinations
 
-## 🎨 Konfiguracja obfuskacji
-
-Parametry obfuskacji (w `build.js`):
-- `compact: true` - Kompaktowy kod
-- `simplify: true` - Uproszczenie kodu
-- `identifierNamesGenerator: "hexadecimal"` - Nazwy zmiennych w hex
-- `splitStrings: true` - Dzielenie stringów
-- `numbersToExpressions: true` - Konwersja liczb na wyrażenia
-
 ## 📝 API
 
 ### Pollinations AI API
@@ -188,21 +173,9 @@ MIT License - zobacz plik [LICENSE](LICENSE)
 
 Copyright (c) 2025 Paweł (fixeq)
 
-## 👤 Autor
-
-**fixeq** - [FixeQyt](https://github.com/FixeQyt)
-
 ## ⚠️ Disclaimer
 
 To narzędzie zostało stworzone wyłącznie w celach edukacyjnych. Użytkownik ponosi pełną odpowiedzialność za sposób wykorzystania tego rozszerzenia. Autor nie ponosi odpowiedzialności za niewłaściwe użycie tego oprogramowania.
-
-## 🤝 Wkład
-
-Pull requesty są mile widziane! W przypadku większych zmian, najpierw otwórz issue, aby omówić proponowane zmiany.
-
-## 📮 Kontakt
-
-Jeśli masz pytania lub sugestie, otwórz issue w repozytorium GitHub.
 
 ---
 

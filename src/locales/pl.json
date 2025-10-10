@@ -1,0 +1,12 @@
+{
+  "settings": "Ustawienia",
+  "apiKey": "API Key",
+  "language": "Język",
+  "save": "Zapisz",
+  "delete": "Usuń",
+  "apiKeySaved": "API key zapisany pomyślnie!",
+  "apiKeyDeleted": "API key usunięty pomyślnie!",
+  "pleaseEnterApiKey": "Proszę wpisać API key",
+  "polish": "Polski",
+  "english": "Angielski"
+}
