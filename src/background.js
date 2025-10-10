@@ -1,3 +1,40 @@
+// Translation resources for background.js
+const i18nResources = {
+	pl: {
+		errorCapturingImage: "Błąd podczas przechwytywania obrazu",
+		errorCopyingToClipboard: "Błąd kopiowania do schowka",
+		errorLoadingImage: "Błąd ładowania obrazu",
+		imageCopiedToClipboard: "Obraz skopiowany do schowka",
+		analyzingImage: "Analizuję obraz...",
+		errorAnalyzingImage: "Błąd podczas analizy obrazu",
+		aiAnalysis: "✨ Analiza AI"
+	},
+	en: {
+		errorCapturingImage: "Error capturing image",
+		errorCopyingToClipboard: "Error copying to clipboard",
+		errorLoadingImage: "Error loading image",
+		imageCopiedToClipboard: "Image copied to clipboard",
+		analyzingImage: "Analyzing image...",
+		errorAnalyzingImage: "Error analyzing image",
+		aiAnalysis: "✨ AI Analysis"
+	}
+};
+
+// Get current language from storage or default to 'pl'
+let currentLanguage = 'pl';
+
+// Helper function to get translation
+function t(key) {
+	return i18nResources[currentLanguage]?.[key] || i18nResources['pl'][key] || key;
+}
+
+// Initialize language from storage
+chrome.storage.sync.get(['language'], (result) => {
+	if (result.language) {
+		currentLanguage = result.language;
+	}
+});
+
 chrome.action.onClicked.addListener(async (tab) => {
 	try {
 		await chrome.scripting.executeScript({
@@ -24,6 +61,41 @@ function initScreenshotSelector() {
 	}
 
 	window.screenshotSelectorActive = true;
+
+	// Translation resources
+	const i18nResources = {
+		pl: {
+			errorCapturingImage: "Błąd podczas przechwytywania obrazu",
+			errorCopyingToClipboard: "Błąd kopiowania do schowka",
+			errorLoadingImage: "Błąd ładowania obrazu",
+			imageCopiedToClipboard: "Obraz skopiowany do schowka",
+			analyzingImage: "Analizuję obraz...",
+			errorAnalyzingImage: "Błąd podczas analizy obrazu",
+			aiAnalysis: "✨ Analiza AI"
+		},
+		en: {
+			errorCapturingImage: "Error capturing image",
+			errorCopyingToClipboard: "Error copying to clipboard",
+			errorLoadingImage: "Error loading image",
+			imageCopiedToClipboard: "Image copied to clipboard",
+			analyzingImage: "Analyzing image...",
+			errorAnalyzingImage: "Error analyzing image",
+			aiAnalysis: "✨ AI Analysis"
+		}
+	};
+
+	// Get current language (default to 'pl')
+	let currentLanguage = 'pl';
+	chrome.storage.sync.get(['language'], (result) => {
+		if (result.language) {
+			currentLanguage = result.language;
+		}
+	});
+
+	// Helper function to get translation
+	function t(key) {
+		return i18nResources[currentLanguage]?.[key] || i18nResources['pl'][key] || key;
+	}
 
 	let isSelecting = false;
 	let startX, startY, endX, endY;
@@ -154,7 +226,7 @@ function initScreenshotSelector() {
 				{ action: "captureScreenshot" },
 				async (response) => {
 					if (!response || !response.dataUrl) {
-						showMessage("Błąd podczas przechwytywania obrazu", "error");
+						showMessage(t("errorCapturingImage"), "error");
 						cleanup();
 						return;
 					}
@@ -180,7 +252,7 @@ function initScreenshotSelector() {
 								await showAIAnalysis(blob, x, y);
 							} catch (error) {
 								console.error("Failed to copy to clipboard:", error);
-								showMessage("Błąd kopiowania do schowka", "error");
+								showMessage(t("errorCopyingToClipboard"), "error");
 							}
 
 							cleanup();
@@ -188,7 +260,7 @@ function initScreenshotSelector() {
 					};
 
 					img.onerror = () => {
-						showMessage("Błąd ładowania obrazu", "error");
+						showMessage(t("errorLoadingImage"), "error");
 						cleanup();
 					};
 
@@ -197,7 +269,7 @@ function initScreenshotSelector() {
 			);
 		} catch (error) {
 			console.error("Capture failed:", error);
-			showMessage("Błąd podczas przechwytywania obrazu", "error");
+			showMessage(t("errorCapturingImage"), "error");
 			cleanup();
 		}
 	}
@@ -259,14 +331,14 @@ function initScreenshotSelector() {
         cursor: move;
         user-select: none;
       ">
-        <h3 style="margin: 0; color: white; font-size: 16px;">✨ Analiza AI</h3>
+        <h3 style="margin: 0; color: white; font-size: 16px;">${t("aiAnalysis")}</h3>
       </div>
       <div id="popup-content" style="
         padding: 20px;
         max-height: 400px;
         overflow-y: auto;
       ">
-        <div id="ai-loading" style="color: #666; margin-bottom: 15px;">Analizuję obraz...</div>
+        <div id="ai-loading" style="color: #666; margin-bottom: 15px;">${t("analyzingImage")}</div>
         <div id="ai-result" style="display: none; color: #333; line-height: 1.6; margin-bottom: 15px;"></div>
         <button id="close-ai-popup" style="
           background: #4285f4;
@@ -354,7 +426,7 @@ function initScreenshotSelector() {
 
 				if (!apiKey) {
 					popup.remove();
-					showMessage("Obraz skopiowany do schowka", "success");
+					showMessage(t("imageCopiedToClipboard"), "success");
 					return;
 				}
 
@@ -616,7 +688,7 @@ KRYTYCZNE ZASADY:
 		} catch (error) {
 			console.error("AI Analysis failed:", error);
 			popup.querySelector("#ai-loading").textContent =
-				"Błąd podczas analizy obrazu";
+				t("errorAnalyzingImage");
 		}
 	}
 

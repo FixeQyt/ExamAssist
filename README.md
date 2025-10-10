@@ -1,182 +1,185 @@
 # Screenshot Selector - AI Test Helper
 
-Rozszerzenie Chrome do przechwytywania zrzutów ekranu i analizowania pytań testowych za pomocą AI.
+Chrome extension for capturing screenshots and analyzing test questions using AI.
 
-## 📋 Opis
+## 📋 Description
 
-Screenshot Selector to rozszerzenie Chrome, które pozwala:
-- Zaznaczać obszar na stronie i kopiować go jako obraz do schowka
-- Analizować pytania testowe za pomocą AI (Pollinations API)
-- Automatycznie rozpoznawać typ pytania (jednokrotny wybór, wielokrotny wybór, tekstowe)
-- Otrzymywać odpowiedzi w języku polskim
-- Omijać zabezpieczenia testportal.pl/testportal.net
+Screenshot Selector is a Chrome extension that allows you to:
+- Select an area on a page and copy it as an image to the clipboard
+- Analyze test questions using AI (Pollinations API)
+- Automatically recognize question types (single choice, multiple choice, text)
+- Receive answers in Polish
+- Bypass testportal.pl/testportal.net protections
 
-## ✨ Funkcje
+## ✨ Features
 
-- **Zaznaczanie obszaru**: Kliknij ikonę rozszerzenia i zaznacz dowolny obszar na stronie
-- **Analiza AI**: Automatyczna analiza pytań testowych z obrazu
-- **Kopiowanie do schowka**: Obraz jest automatycznie kopiowany do schowka
-- **Tryby odpowiedzi**: Rozpoznawanie różnych typów pytań (text/select_one/multi_select)
-- **Wielojęzyczność**: Wsparcie dla języka polskiego i angielskiego
-- **Bypass zabezpieczeń**: Omijanie zabezpieczeń testportal.pl
+- **Area Selection**: Click the extension icon and select any area on the page
+- **AI Analysis**: Automatic analysis of test questions from images
+- **Clipboard Copy**: Image is automatically copied to the clipboard
+- **Answer Modes**: Recognition of different question types (text/select_one/multi_select)
+- **Multilingual**: Support for Polish and English languages
+- **Security Bypass**: Bypass testportal.pl protections
 
-## 🚀 Instalacja
+## 🚀 Installation
 
-### Wymagania
-- Node.js (wersja 16 lub nowsza)
-- Chrome/Edge/Brave (wspierane przeglądarki Chromium)
+### Requirements
+- Node.js (version 16 or newer)
+- Chrome/Edge/Brave (supported Chromium browsers)
 
-### Kroki instalacji
+### Installation Steps
 
-1. **Sklonuj repozytorium**
+1. **Clone the repository**
 ```bash
 git clone https://github.com/FixeQyt/ai-cheat.git
 cd ai-cheat
 ```
 
-2. **Zainstaluj zależności**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Zbuduj rozszerzenie**
+3. **Build the extension**
 ```bash
-# Standardowa kompilacja
+# Standard build
 npm run build
 
-# Z obfuskacją kodu
+# Build with obfuscation
 npm run build:obfuscate
 ```
 
-4. **Załaduj do Chrome**
-   - Otwórz `chrome://extensions/`
-   - Włącz "Tryb programisty" (Developer mode)
-   - Kliknij "Załaduj rozpakowane" (Load unpacked)
-   - Wybierz folder `dist` z projektu
+4. **Load into Chrome**
+   - Open `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `dist` folder from the project
 
-## ⚙️ Konfiguracja
+## ⚙️ Configuration
 
 ### API Key (Pollinations)
 
-1. Kliknij ikonę rozszerzenia prawym przyciskiem myszy i wybierz "Opcje"
-2. Wpisz swój klucz API Pollinations
-3. Wybierz preferowany język interfejsu (polski/angielski)
-4. Kliknij "Zapisz"
+1. Right-click the extension icon and select "Options"
+2. Enter your Pollinations API key
+3. Select your preferred interface language (Polish/English)
+4. Click "Save"
 
-**Uwaga**: Bez klucza API, rozszerzenie będzie tylko kopiować obrazy do schowka bez analizy AI.
+**Note**: Without an API key, the extension will only copy images to the clipboard without AI analysis.
 
-## 📖 Użycie
+## 📖 Usage
 
-### Podstawowe użycie
+### Basic Usage
 
-1. **Kliknij ikonę rozszerzenia** w pasku narzędzi Chrome
-2. **Zaznacz obszar** na stronie, który chcesz przechwycić
-3. **Automatyczna analiza**: Jeśli masz skonfigurowany API key, otrzymasz:
-   - Rozpoznane pytanie
-   - Typ odpowiedzi
-   - Sugerowaną odpowiedź
+1. **Click the extension icon** in the Chrome toolbar
+2. **Select an area** on the page you want to capture
+3. **Automatic analysis**: If you have an API key configured, you'll receive:
+   - Detected question
+   - Answer type
+   - Suggested answer
 
-### Wynik analizy AI
+### AI Analysis Result
 
-Rozszerzenie zwraca dane w formacie JSON:
+The extension returns data in JSON format:
 ```json
 {
-  "question": "wykryte pytanie",
+  "question": "detected question",
   "answer_type": "text|select_one|multi_select",
-  "answer": "odpowiedź"
+  "answer": "answer"
 }
 ```
 
-### Typy odpowiedzi
+### Answer Types
 
-- **text**: Pytania otwarte wymagające tekstowej odpowiedzi
-- **select_one**: Pytania jednokrotnego wyboru (A, B, C, D)
-- **multi_select**: Pytania wielokrotnego wyboru (zaznacz wszystkie poprawne)
+- **text**: Open-ended questions requiring text answers
+- **select_one**: Single choice questions (A, B, C, D)
+- **multi_select**: Multiple choice questions (select all correct)
 
-### Specjalne funkcje
+### Special Features
 
-#### Rozwijanie skrótów
-Jeśli pytanie zawiera skróty (np. CPU, RAM, HTML), AI odpowiada w oryginalnym języku skrótu:
-- CPU → "Central Processing Unit" (angielski)
-- BRD → "Bundesrepublik Deutschland" (niemiecki)
+#### Acronym Expansion
+If a question contains acronyms (e.g., CPU, RAM, HTML), AI responds in the original language of the acronym:
+- CPU → "Central Processing Unit" (English)
+- BRD → "Bundesrepublik Deutschland" (German)
 
-## 🏗️ Struktura projektu
+## 🏗️ Project Structure
 
 ```
 ai-cheat/
 ├── src/
-│   ├── background.js      # Główna logika rozszerzenia
+│   ├── background.js      # Main extension logic
 │   ├── content.js         # Content script
-│   ├── bypass-inject.js   # Bypass dla testportal
-│   ├── options.js         # Strona opcji
-│   └── options.html       # UI strony opcji
-├── build.js               # Skrypt budowania
-├── manifest.json          # Manifest rozszerzenia Chrome
-├── package.json           # Zależności npm
-└── LICENSE                # Licencja MIT
+│   ├── bypass-inject.js   # Testportal bypass
+│   ├── options.js         # Options page
+│   ├── options.html       # Options page UI
+│   └── locales/           # Translation files
+│       ├── pl.json        # Polish translations
+│       └── en.json        # English translations
+├── build.js               # Build script
+├── manifest.json          # Chrome extension manifest
+├── package.json           # npm dependencies
+└── LICENSE                # MIT License
 ```
 
-## 🔨 Skrypty budowania
+## 🔨 Build Scripts
 
 ```bash
-# Budowanie bez obfuskacji
+# Build without obfuscation
 npm run build
 
-# Budowanie z obfuskacją
+# Build with obfuscation
 npm run build:obfuscate
 ```
 
-### Co robi budowanie?
+### What Does Building Do?
 
-1. Kompiluje pliki JavaScript za pomocą esbuild
-2. (Opcjonalnie) Obfuskuje kod za pomocą javascript-obfuscator
-3. Kopiuje pliki statyczne (manifest.json, options.html, LICENSE, README.md)
-4. Tworzy folder `dist/` z gotowym rozszerzeniem
+1. Compiles JavaScript files using esbuild
+2. (Optionally) Obfuscates code using javascript-obfuscator
+3. Copies static files (manifest.json, options.html, LICENSE, README.md)
+4. Creates `dist/` folder with ready extension
 
-## 🔒 Bezpieczeństwo i prywatność
+## 🔒 Security and Privacy
 
-- **API Key**: Przechowywany bezpiecznie w Chrome Storage API
-- **Uprawnienia**: Rozszerzenie wymaga minimalnych uprawnień:
-  - `activeTab`: Dostęp do aktywnej karty
-  - `scripting`: Wstrzykiwanie skryptów
-  - `storage`: Przechowywanie klucza API
-- **Host Permissions**: Dostęp tylko do testportal.pl/net i API Pollinations
+- **API Key**: Stored securely in Chrome Storage API
+- **Permissions**: Extension requires minimal permissions:
+  - `activeTab`: Access to active tab
+  - `scripting`: Script injection
+  - `storage`: API key storage
+- **Host Permissions**: Access only to testportal.pl/net and Pollinations API
 
 ## 📝 API
 
 ### Pollinations AI API
 
-Rozszerzenie używa Pollinations API do analizy obrazów:
+The extension uses Pollinations API for image analysis:
 - **Endpoint**: `https://text.pollinations.ai/openai/v1/chat/completions`
 - **Model**: `o4-mini`
 - **Format**: OpenAI-compatible API
 
-## 🐛 Rozwiązywanie problemów
+## 🐛 Troubleshooting
 
-### Rozszerzenie nie działa
-1. Sprawdź czy rozszerzenie jest włączone w `chrome://extensions/`
-2. Przeładuj stronę po zainstalowaniu rozszerzenia
-3. Sprawdź konsolę przeglądarki (F12) pod kątem błędów
+### Extension Not Working
+1. Check if the extension is enabled in `chrome://extensions/`
+2. Reload the page after installing the extension
+3. Check the browser console (F12) for errors
 
-### AI nie zwraca odpowiedzi
-1. Sprawdź czy masz skonfigurowany API key w opcjach
-2. Sprawdź połączenie internetowe
-3. Sprawdź czy API key jest prawidłowy
+### AI Not Returning Answers
+1. Check if you have an API key configured in options
+2. Check your internet connection
+3. Verify that the API key is correct
 
-### Obraz nie jest kopiowany
-1. Sprawdź uprawnienia do schowka w przeglądarce
-2. Spróbuj zaznaczać większy obszar (min. 10x10 px)
+### Image Not Being Copied
+1. Check clipboard permissions in the browser
+2. Try selecting a larger area (min. 10x10 px)
 
-## 📄 Licencja
+## 📄 License
 
-MIT License - zobacz plik [LICENSE](LICENSE)
+MIT License - see [LICENSE](LICENSE) file
 
 Copyright (c) 2025 Paweł (fixeq)
 
 ## ⚠️ Disclaimer
 
-To narzędzie zostało stworzone wyłącznie w celach edukacyjnych. Użytkownik ponosi pełną odpowiedzialność za sposób wykorzystania tego rozszerzenia. Autor nie ponosi odpowiedzialności za niewłaściwe użycie tego oprogramowania.
+This tool was created solely for educational purposes. The user bears full responsibility for how this extension is used. The author is not responsible for misuse of this software.
 
 ---
 
-**Uwaga**: To rozszerzenie działa najlepiej na stronach testportal.pl i testportal.net, gdzie automatycznie omija niektóre zabezpieczenia.
+**Note**: This extension works best on testportal.pl and testportal.net sites, where it automatically bypasses certain protections.
