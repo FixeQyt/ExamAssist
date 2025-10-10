@@ -1,6 +1,9 @@
 import plTranslations from "./locales/pl.json";
 import enTranslations from "./locales/en.json";
 
+// Cross-browser compatibility
+const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
+
 // Translation resources for background.js
 const i18nResources = {
 	pl: plTranslations,
@@ -16,18 +19,18 @@ function t(key) {
 }
 
 // Initialize language from storage
-chrome.storage.sync.get(['language'], (result) => {
+browserAPI.storage.sync.get(['language'], (result) => {
 	if (result.language) {
 		currentLanguage = result.language;
 	}
 });
 
-chrome.action.onClicked.addListener(async (tab) => {
+browserAPI.action.onClicked.addListener(async (tab) => {
 	try {
 		// Get current language and pass translations
-		chrome.storage.sync.get(['language'], async (result) => {
+		browserAPI.storage.sync.get(['language'], async (result) => {
 			const lang = result.language || 'en';
-			await chrome.scripting.executeScript({
+			await browserAPI.scripting.executeScript({
 				target: { tabId: tab.id },
 				func: initScreenshotSelector,
 				args: [i18nResources[lang]]
@@ -38,9 +41,9 @@ chrome.action.onClicked.addListener(async (tab) => {
 	}
 });
 
-chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+browserAPI.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 	if (request.action === "captureScreenshot") {
-		chrome.tabs.captureVisibleTab(null, { format: "png" }, (dataUrl) => {
+		browserAPI.tabs.captureVisibleTab(null, { format: "png" }, (dataUrl) => {
 			sendResponse({ dataUrl: dataUrl });
 		});
 		return true;
@@ -53,6 +56,9 @@ function initScreenshotSelector(translations) {
 	}
 
 	window.screenshotSelectorActive = true;
+
+	// Cross-browser compatibility
+	const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
 
 	// Helper function to get translation
 	function t(key) {
@@ -184,7 +190,7 @@ function initScreenshotSelector(translations) {
 
 			await new Promise((resolve) => setTimeout(resolve, 100));
 
-			chrome.runtime.sendMessage(
+			browserAPI.runtime.sendMessage(
 				{ action: "captureScreenshot" },
 				async (response) => {
 					if (!response || !response.dataUrl) {
@@ -383,7 +389,7 @@ function initScreenshotSelector(translations) {
 		});
 
 		try {
-			chrome.storage.sync.get(["pollinationsApiKey"], async (result) => {
+			browserAPI.storage.sync.get(["pollinationsApiKey"], async (result) => {
 				const apiKey = result.pollinationsApiKey;
 
 				if (!apiKey) {

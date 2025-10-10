@@ -2,6 +2,9 @@ import i18next from "i18next";
 import plTranslations from "./locales/pl.json";
 import enTranslations from "./locales/en.json";
 
+// Cross-browser compatibility
+const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
+
 // Translation resources
 const resources = {
 	pl: {
@@ -38,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const statusDiv = document.getElementById("status");
 
 	// Load saved settings
-	chrome.storage.sync.get(
+	browserAPI.storage.sync.get(
 		["pollinationsApiKey", "language"],
 		async (result) => {
 			if (result.pollinationsApiKey) {
@@ -56,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	// Language change handler
 	languageSelect.addEventListener("change", async () => {
 		const selectedLanguage = languageSelect.value;
-		chrome.storage.sync.set({ language: selectedLanguage }, async () => {
+		browserAPI.storage.sync.set({ language: selectedLanguage }, async () => {
 			await initI18n(selectedLanguage);
 			updateUI();
 		});
@@ -71,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			return;
 		}
 
-		chrome.storage.sync.set({ pollinationsApiKey: apiKey }, () => {
+		browserAPI.storage.sync.set({ pollinationsApiKey: apiKey }, () => {
 			statusDiv.className = "status success";
 			statusDiv.textContent = i18next.t("apiKeySaved");
 
@@ -82,7 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	});
 
 	deleteButton.addEventListener("click", () => {
-		chrome.storage.sync.remove(["pollinationsApiKey"], () => {
+		browserAPI.storage.sync.remove(["pollinationsApiKey"], () => {
 			apiKeyInput.value = "";
 			statusDiv.className = "status success";
 			statusDiv.textContent = i18next.t("apiKeyDeleted");
