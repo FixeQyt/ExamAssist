@@ -8,7 +8,7 @@ Screenshot Selector is a Chrome extension that allows you to:
 - Select an area on a page and copy it as an image to the clipboard
 - Analyze test questions using AI (Pollinations API)
 - Automatically recognize question types (single choice, multiple choice, text)
-- Receive answers in Polish
+- Receive answers in your selected language (Polish/English)
 - Bypass testportal.pl/testportal.net protections
 
 ## ✨ Features
@@ -17,7 +17,7 @@ Screenshot Selector is a Chrome extension that allows you to:
 - **AI Analysis**: Automatic analysis of test questions from images
 - **Clipboard Copy**: Image is automatically copied to the clipboard
 - **Answer Modes**: Recognition of different question types (text/select_one/multi_select)
-- **Multilingual**: Support for Polish and English languages
+- **Multilingual**: Full support for Polish and English languages (UI and AI prompts)
 - **Security Bypass**: Bypass testportal.pl protections
 
 ## 🚀 Installation
@@ -64,6 +64,19 @@ npm run build:obfuscate
 4. Click "Save"
 
 **Note**: Without an API key, the extension will only copy images to the clipboard without AI analysis.
+
+### Language Selection
+
+The extension supports full internationalization (i18n):
+- **UI Language**: All interface elements (buttons, labels, messages) are translated
+- **AI Prompts**: The AI system receives instructions in the selected language
+- **AI Responses**: The AI provides answers in the selected language
+
+Supported languages:
+- **Polish (Polski)**: Full UI and AI prompts in Polish
+- **English**: Full UI and AI prompts in English
+
+To change the language, go to the Options page and select your preferred language from the dropdown menu.
 
 ## 📖 Usage
 

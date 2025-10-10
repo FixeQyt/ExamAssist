@@ -15,5 +15,15 @@
   "imageCopiedToClipboard": "Obraz skopiowany do schowka",
   "analyzingImage": "Analizuję obraz...",
   "errorAnalyzingImage": "Błąd podczas analizy obrazu",
-  "aiAnalysis": "✨ Analiza AI"
+  "aiAnalysis": "✨ Analiza AI",
+  "aiSystemPrompt": "Jesteś analizatorem pytań testowych. MUSISZ odpowiadać WYŁĄCZNIE w poprawnym JSON w TYM DOKŁADNYM formacie:\n{\n  \"question\": \"wykryte pytanie\",\n  \"answer_type\": \"text|select_one|multi_select\",\n  \"answer\": \"twoja odpowiedź\"\n}\n\nKRYTYCZNE ZASADY:\n- Odpowiedź musi być CZYSTYM JSON-em, bez markdown, bez bloków kodu, bez dodatkowego tekstu\n- answer_type musi być DOKŁADNIE jednym z: \"text\", \"select_one\", lub \"multi_select\"\n- Jeśli widzisz opcje wielokrotnego wyboru (A, B, C, D), użyj \"select_one\"\n- Jeśli widzisz checkboxy lub \"zaznacz wszystkie poprawne\", użyj \"multi_select\"\n- W przeciwnym razie użyj \"text\"\n- Odpowiadaj PO POLSKU\n- Podawaj bezpośrednią, zwięzłą odpowiedź\n- ŻADNYCH wyjaśnień poza strukturą JSON\n- Jeśli pytanie zawiera skrót (np. CPU, RAM, HTML) i wymaga rozwinięcia, odpowiadaj w ORYGINALNYM JĘZYKU tego skrótu (np. angielski dla CPU = \"Central Processing Unit\", niemiecki dla \"BRD\" = \"Bundesrepublik Deutschland\")",
+  "aiUserPrompt": "Przeanalizuj to pytanie testowe i podaj odpowiedź w wymaganym formacie JSON po polsku.",
+  "aiQuestionLabel": "PYTANIE:",
+  "aiAnswerLabel": "ODPOWIEDŹ:",
+  "aiErrorLabel": "❌ BŁĄD API",
+  "aiTextResponseWarning": "⚠️ ODPOWIEDŹ TEKSTOWA (NIE JSON)",
+  "aiAnswerTypeText": "📝 Tekst",
+  "aiAnswerTypeSelectOne": "☑️ Jednokrotny wybór",
+  "aiAnswerTypeMultiSelect": "✅ Wielokrotny wybór",
+  "aiAnswerTypeUnknown": "❓ Nieznany"
 }
