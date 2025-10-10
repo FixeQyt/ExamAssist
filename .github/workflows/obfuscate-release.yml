@@ -48,14 +48,14 @@ jobs:
             - name: Create ZIP package for Chrome
               run: |
                   cd dist
-                  zip -r ../cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip .
+                  zip -r ../cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip . -x "*.DS_Store"
                   cd ..
                   echo "📦 Created: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
             
             - name: Create XPI package for Firefox
               run: |
                   cd dist-firefox
-                  zip -r ../cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi .
+                  zip -r ../cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi . -x "*.DS_Store"
                   cd ..
                   echo "📦 Created: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
             
