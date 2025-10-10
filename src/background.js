@@ -411,30 +411,14 @@ function initScreenshotSelector(translations) {
 									messages: [
 										{
 											role: "system",
-											content: `Jesteś analizatorem pytań testowych. MUSISZ odpowiadać WYŁĄCZNIE w poprawnym JSON w TYM DOKŁADNYM formacie:
-{
-  "question": "wykryte pytanie",
-  "answer_type": "text|select_one|multi_select",
-  "answer": "twoja odpowiedź"
-}
-
-KRYTYCZNE ZASADY:
-- Odpowiedź musi być CZYSTYM JSON-em, bez markdown, bez bloków kodu, bez dodatkowego tekstu
-- answer_type musi być DOKŁADNIE jednym z: "text", "select_one", lub "multi_select"
-- Jeśli widzisz opcje wielokrotnego wyboru (A, B, C, D), użyj "select_one"
-- Jeśli widzisz checkboxy lub "zaznacz wszystkie poprawne", użyj "multi_select"
-- W przeciwnym razie użyj "text"
-- Odpowiadaj PO POLSKU
-- Podawaj bezpośrednią, zwięzłą odpowiedź
-- ŻADNYCH wyjaśnień poza strukturą JSON
-- Jeśli pytanie zawiera skrót (np. CPU, RAM, HTML) i wymaga rozwinięcia, odpowiadaj w ORYGINALNYM JĘZYKU tego skrótu (np. angielski dla CPU = "Central Processing Unit", niemiecki dla "BRD" = "Bundesrepublik Deutschland")`,
+											content: t("aiSystemPrompt"),
 										},
 										{
 											role: "user",
 											content: [
 												{
 													type: "text",
-													text: "Przeanalizuj to pytanie testowe i podaj odpowiedź w wymaganym formacie JSON po polsku.",
+													text: t("aiUserPrompt"),
 												},
 												{
 													type: "image_url",
@@ -480,7 +464,7 @@ KRYTYCZNE ZASADY:
 							resultDiv.innerHTML = `
 								<div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
 									<div style="font-size: 11px; color: #92400e; font-weight: 600; margin-bottom: 6px;">
-										⚠️ ODPOWIEDŹ TEKSTOWA (NIE JSON)
+										${t("aiTextResponseWarning")}
 									</div>
 								</div>
 								<div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 6px;">
@@ -521,10 +505,10 @@ KRYTYCZNE ZASADY:
 
 						const answerTypeBadge =
 							{
-								text: "📝 Tekst",
-								select_one: "☑️ Jednokrotny wybór",
-								multi_select: "✅ Wielokrotny wybór",
-							}[parsedData.answer_type] || "❓ Nieznany";
+								text: t("aiAnswerTypeText"),
+								select_one: t("aiAnswerTypeSelectOne"),
+								multi_select: t("aiAnswerTypeMultiSelect"),
+							}[parsedData.answer_type] || t("aiAnswerTypeUnknown");
 
 						let answerHTML = "";
 						if (parsedData.answer_type === "multi_select") {
@@ -589,7 +573,7 @@ KRYTYCZNE ZASADY:
 								margin-bottom: 12px;
 							">
 								<div style="font-size: 11px; color: #0369a1; font-weight: 600; margin-bottom: 6px;">
-									PYTANIE:
+									${t("aiQuestionLabel")}
 								</div>
 								<div style="color: #1e293b; font-size: 13px;">
 									${parsedData.question}
@@ -611,7 +595,7 @@ KRYTYCZNE ZASADY:
 								">
 									<span style="font-size: 20px;">✓</span>
 									<span style="font-size: 11px; color: #15803d; font-weight: 600;">
-										ODPOWIEDŹ:
+										${t("aiAnswerLabel")}
 									</span>
 								</div>
 								${answerHTML}
@@ -637,7 +621,7 @@ KRYTYCZNE ZASADY:
 						resultDiv.innerHTML = `
 							<div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 12px; border-radius: 6px;">
 								<div style="font-size: 11px; color: #991b1b; font-weight: 600; margin-bottom: 6px;">
-									❌ BŁĄD API
+									${t("aiErrorLabel")}
 								</div>
 								<div style="color: #7f1d1d; font-size: 12px;">
 									${error.message}
