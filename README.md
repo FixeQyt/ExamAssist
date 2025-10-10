@@ -106,13 +106,6 @@ The extension returns data in JSON format:
 - **select_one**: Single choice questions (A, B, C, D)
 - **multi_select**: Multiple choice questions (select all correct)
 
-### Special Features
-
-#### Acronym Expansion
-If a question contains acronyms (e.g., CPU, RAM, HTML), AI responds in the original language of the acronym:
-- CPU → "Central Processing Unit" (English)
-- BRD → "Bundesrepublik Deutschland" (German)
-
 ## 🏗️ Project Structure
 
 ```
@@ -187,12 +180,9 @@ The extension uses Pollinations API for image analysis:
 
 MIT License - see [LICENSE](LICENSE) file
 
-Copyright (c) 2025 Paweł (fixeq)
-
 ## ⚠️ Disclaimer
 
 This tool was created solely for educational purposes. The user bears full responsibility for how this extension is used. The author is not responsible for misuse of this software.
 
----
-
-**Note**: This extension works best on testportal.pl and testportal.net sites, where it automatically bypasses certain protections.
+> [!NOTE]  
+> README.md made by AI lol
