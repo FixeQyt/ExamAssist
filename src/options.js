@@ -1,42 +1,22 @@
 import i18next from "i18next";
+import plTranslations from "./locales/pl.json";
+import enTranslations from "./locales/en.json";
 
 // Translation resources
 const resources = {
 	pl: {
-		translation: {
-			settings: "Ustawienia",
-			apiKey: "API Key",
-			language: "Język",
-			save: "Zapisz",
-			delete: "Usuń",
-			apiKeySaved: "API key zapisany pomyślnie!",
-			apiKeyDeleted: "API key usunięty pomyślnie!",
-			pleaseEnterApiKey: "Proszę wpisać API key",
-			polish: "Polski",
-			english: "Angielski",
-		},
+		translation: plTranslations
 	},
 	en: {
-		translation: {
-			settings: "Settings",
-			apiKey: "API Key",
-			language: "Language",
-			save: "Save",
-			delete: "Delete",
-			apiKeySaved: "API key saved successfully!",
-			apiKeyDeleted: "API key deleted successfully!",
-			pleaseEnterApiKey: "Please enter API key",
-			polish: "Polish",
-			english: "English",
-		},
+		translation: enTranslations
 	},
 };
 
 // Initialize i18next
-async function initI18n(language = "pl") {
+async function initI18n(language = "en") {
 	await i18next.init({
 		lng: language,
-		fallbackLng: "pl",
+		fallbackLng: "en",
 		resources,
 	});
 }
@@ -65,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 				apiKeyInput.value = result.pollinationsApiKey;
 			}
 
-			const savedLanguage = result.language || "pl";
+			const savedLanguage = result.language || "en";
 			languageSelect.value = savedLanguage;
 
 			await initI18n(savedLanguage);

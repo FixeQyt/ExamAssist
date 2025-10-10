@@ -7,12 +7,12 @@ const i18nResources = {
 	en: enTranslations
 };
 
-// Get current language from storage or default to 'pl'
-let currentLanguage = 'pl';
+// Get current language from storage or default to 'en'
+let currentLanguage = 'en';
 
 // Helper function to get translation
 function t(key) {
-	return i18nResources[currentLanguage]?.[key] || i18nResources['pl'][key] || key;
+	return i18nResources[currentLanguage]?.[key] || i18nResources['en'][key] || key;
 }
 
 // Initialize language from storage
@@ -26,7 +26,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 	try {
 		// Get current language and pass translations
 		chrome.storage.sync.get(['language'], async (result) => {
-			const lang = result.language || 'pl';
+			const lang = result.language || 'en';
 			await chrome.scripting.executeScript({
 				target: { tabId: tab.id },
 				func: initScreenshotSelector,
