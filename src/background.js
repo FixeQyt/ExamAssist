@@ -1,23 +1,10 @@
+import plTranslations from "./locales/pl.json";
+import enTranslations from "./locales/en.json";
+
 // Translation resources for background.js
 const i18nResources = {
-	pl: {
-		errorCapturingImage: "Błąd podczas przechwytywania obrazu",
-		errorCopyingToClipboard: "Błąd kopiowania do schowka",
-		errorLoadingImage: "Błąd ładowania obrazu",
-		imageCopiedToClipboard: "Obraz skopiowany do schowka",
-		analyzingImage: "Analizuję obraz...",
-		errorAnalyzingImage: "Błąd podczas analizy obrazu",
-		aiAnalysis: "✨ Analiza AI"
-	},
-	en: {
-		errorCapturingImage: "Error capturing image",
-		errorCopyingToClipboard: "Error copying to clipboard",
-		errorLoadingImage: "Error loading image",
-		imageCopiedToClipboard: "Image copied to clipboard",
-		analyzingImage: "Analyzing image...",
-		errorAnalyzingImage: "Error analyzing image",
-		aiAnalysis: "✨ AI Analysis"
-	}
+	pl: plTranslations,
+	en: enTranslations
 };
 
 // Get current language from storage or default to 'pl'
@@ -37,9 +24,14 @@ chrome.storage.sync.get(['language'], (result) => {
 
 chrome.action.onClicked.addListener(async (tab) => {
 	try {
-		await chrome.scripting.executeScript({
-			target: { tabId: tab.id },
-			func: initScreenshotSelector,
+		// Get current language and pass translations
+		chrome.storage.sync.get(['language'], async (result) => {
+			const lang = result.language || 'pl';
+			await chrome.scripting.executeScript({
+				target: { tabId: tab.id },
+				func: initScreenshotSelector,
+				args: [i18nResources[lang]]
+			});
 		});
 	} catch (error) {
 		console.error("Failed to inject script:", error);
@@ -55,46 +47,16 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 	}
 });
 
-function initScreenshotSelector() {
+function initScreenshotSelector(translations) {
 	if (window.screenshotSelectorActive) {
 		return;
 	}
 
 	window.screenshotSelectorActive = true;
 
-	// Translation resources
-	const i18nResources = {
-		pl: {
-			errorCapturingImage: "Błąd podczas przechwytywania obrazu",
-			errorCopyingToClipboard: "Błąd kopiowania do schowka",
-			errorLoadingImage: "Błąd ładowania obrazu",
-			imageCopiedToClipboard: "Obraz skopiowany do schowka",
-			analyzingImage: "Analizuję obraz...",
-			errorAnalyzingImage: "Błąd podczas analizy obrazu",
-			aiAnalysis: "✨ Analiza AI"
-		},
-		en: {
-			errorCapturingImage: "Error capturing image",
-			errorCopyingToClipboard: "Error copying to clipboard",
-			errorLoadingImage: "Error loading image",
-			imageCopiedToClipboard: "Image copied to clipboard",
-			analyzingImage: "Analyzing image...",
-			errorAnalyzingImage: "Error analyzing image",
-			aiAnalysis: "✨ AI Analysis"
-		}
-	};
-
-	// Get current language (default to 'pl')
-	let currentLanguage = 'pl';
-	chrome.storage.sync.get(['language'], (result) => {
-		if (result.language) {
-			currentLanguage = result.language;
-		}
-	});
-
 	// Helper function to get translation
 	function t(key) {
-		return i18nResources[currentLanguage]?.[key] || i18nResources['pl'][key] || key;
+		return translations[key] || key;
 	}
 
 	let isSelecting = false;
