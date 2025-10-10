@@ -1,6 +1,6 @@
 # Screenshot Selector - AI Test Helper
 
-Chrome extension for capturing screenshots and analyzing test questions using AI.
+Browser extension for capturing screenshots and analyzing test questions using AI. Supports Chrome, Edge, Brave, and Firefox.
 
 ## 📋 Description
 
@@ -24,7 +24,7 @@ Screenshot Selector is a Chrome extension that allows you to:
 
 ### Requirements
 - Node.js (version 16 or newer)
-- Chrome/Edge/Brave (supported Chromium browsers)
+- Chrome/Edge/Brave (supported Chromium browsers) OR Firefox (version 109 or newer)
 
 ### Installation Steps
 
@@ -40,6 +40,8 @@ npm install
 ```
 
 3. **Build the extension**
+
+**For Chrome/Edge/Brave:**
 ```bash
 # Standard build
 npm run build
@@ -48,11 +50,28 @@ npm run build
 npm run build:obfuscate
 ```
 
-4. **Load into Chrome**
+**For Firefox:**
+```bash
+# Standard build
+npm run build:firefox
+
+# Build with obfuscation
+npm run build:firefox:obfuscate
+```
+
+4. **Load into browser**
+
+**Chrome/Edge/Brave:**
    - Open `chrome://extensions/`
    - Enable "Developer mode"
    - Click "Load unpacked"
    - Select the `dist` folder from the project
+
+**Firefox:**
+   - Open `about:debugging#/runtime/this-firefox`
+   - Click "Load Temporary Add-on"
+   - Navigate to the `dist-firefox` folder and select the `manifest.json` file
+   - **Note**: In Firefox, temporary add-ons are removed when you close the browser. For permanent installation, you need to sign the extension through Mozilla Add-ons.
 
 ## ⚙️ Configuration
 
@@ -128,12 +147,14 @@ ai-cheat/
 │       └── en.json        # English translations
 ├── build.js               # Build script
 ├── manifest.json          # Chrome extension manifest
+├── manifest_firefox.json  # Firefox extension manifest
 ├── package.json           # npm dependencies
 └── LICENSE                # MIT License
 ```
 
 ## 🔨 Build Scripts
 
+**Chrome/Edge/Brave:**
 ```bash
 # Build without obfuscation
 npm run build
@@ -142,16 +163,26 @@ npm run build
 npm run build:obfuscate
 ```
 
+**Firefox:**
+```bash
+# Build without obfuscation
+npm run build:firefox
+
+# Build with obfuscation
+npm run build:firefox:obfuscate
+```
+
 ### What Does Building Do?
 
 1. Compiles JavaScript files using esbuild
 2. (Optionally) Obfuscates code using javascript-obfuscator
-3. Copies static files (manifest.json, options.html, LICENSE, README.md)
-4. Creates `dist/` folder with ready extension
+3. Copies the appropriate manifest file (manifest.json for Chrome, manifest_firefox.json for Firefox)
+4. Copies static files (options.html, LICENSE, README.md)
+5. Creates `dist/` folder (Chrome) or `dist-firefox/` folder (Firefox) with ready extension
 
 ## 🔒 Security and Privacy
 
-- **API Key**: Stored securely in Chrome Storage API
+- **API Key**: Stored securely in Browser Storage API (Chrome Storage API / Firefox Storage API)
 - **Permissions**: Extension requires minimal permissions:
   - `activeTab`: Access to active tab
   - `scripting`: Script injection
@@ -170,9 +201,10 @@ The extension uses Pollinations API for image analysis:
 ## 🐛 Troubleshooting
 
 ### Extension Not Working
-1. Check if the extension is enabled in `chrome://extensions/`
-2. Reload the page after installing the extension
-3. Check the browser console (F12) for errors
+1. **Chrome/Edge/Brave**: Check if the extension is enabled in `chrome://extensions/`
+2. **Firefox**: Check if the extension is enabled in `about:addons`
+3. Reload the page after installing the extension
+4. Check the browser console (F12) for errors
 
 ### AI Not Returning Answers
 1. Check if you have an API key configured in options

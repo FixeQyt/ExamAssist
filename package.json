@@ -5,7 +5,9 @@
 	"type": "module",
 	"scripts": {
 		"build": "node build.js",
-		"build:obfuscate": "node build.js --obfuscate"
+		"build:obfuscate": "node build.js --obfuscate",
+		"build:firefox": "node build.js --firefox",
+		"build:firefox:obfuscate": "node build.js --firefox --obfuscate"
 	},
 	"dependencies": {
 		"i18next": "^23.15.2"
