@@ -1,0 +1,19 @@
+{
+  "settings": "Settings",
+  "apiKey": "API Key",
+  "language": "Language",
+  "save": "Save",
+  "delete": "Delete",
+  "apiKeySaved": "API key saved successfully!",
+  "apiKeyDeleted": "API key deleted successfully!",
+  "pleaseEnterApiKey": "Please enter API key",
+  "polish": "Polish",
+  "english": "English",
+  "errorCapturingImage": "Error capturing image",
+  "errorCopyingToClipboard": "Error copying to clipboard",
+  "errorLoadingImage": "Error loading image",
+  "imageCopiedToClipboard": "Image copied to clipboard",
+  "analyzingImage": "Analyzing image...",
+  "errorAnalyzingImage": "Error analyzing image",
+  "aiAnalysis": "✨ AI Analysis"
+}

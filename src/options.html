@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ustawienia - Screenshot Selector</title>
+    <title>Settings - Screenshot Selector</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,13 +28,19 @@
             color: #666;
             font-weight: 500;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 14px;
             box-sizing: border-box;
+        }
+        select {
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 20px;
         }
         button {
             margin-top: 20px;
@@ -78,14 +84,24 @@
 </head>
 <body>
     <div class="container">
-        <h1>Ustawienia</h1>
+        <h1 data-i18n="settings">Settings</h1>
         
-        <label for="apiKey">API Key:</label>
-        <input type="password" id="apiKey">
+        <div class="form-group">
+            <label for="language" data-i18n="language">Language</label>
+            <select id="language">
+                <option value="en" data-i18n="english">English</option>
+                <option value="pl" data-i18n="polish">Polish</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="apiKey" data-i18n="apiKey">API Key</label>
+            <input type="password" id="apiKey">
+        </div>
         
         <div style="display: flex; gap: 10px;">
-            <button id="save">Zapisz</button>
-            <button id="delete" style="background: #dc2626;">Usuń</button>
+            <button id="save" data-i18n="save">Save</button>
+            <button id="delete" style="background: #dc2626;" data-i18n="delete">Delete</button>
         </div>
         
         <div id="status" class="status"></div>

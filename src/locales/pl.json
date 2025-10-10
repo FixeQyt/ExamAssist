@@ -1,0 +1,19 @@
+{
+  "settings": "Ustawienia",
+  "apiKey": "API Key",
+  "language": "Język",
+  "save": "Zapisz",
+  "delete": "Usuń",
+  "apiKeySaved": "API key zapisany pomyślnie!",
+  "apiKeyDeleted": "API key usunięty pomyślnie!",
+  "pleaseEnterApiKey": "Proszę wpisać API key",
+  "polish": "Polski",
+  "english": "Angielski",
+  "errorCapturingImage": "Błąd podczas przechwytywania obrazu",
+  "errorCopyingToClipboard": "Błąd kopiowania do schowka",
+  "errorLoadingImage": "Błąd ładowania obrazu",
+  "imageCopiedToClipboard": "Obraz skopiowany do schowka",
+  "analyzingImage": "Analizuję obraz...",
+  "errorAnalyzingImage": "Błąd podczas analizy obrazu",
+  "aiAnalysis": "✨ Analiza AI"
+}

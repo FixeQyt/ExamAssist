@@ -1,8 +1,37 @@
+import plTranslations from "./locales/pl.json";
+import enTranslations from "./locales/en.json";
+
+// Translation resources for background.js
+const i18nResources = {
+	pl: plTranslations,
+	en: enTranslations
+};
+
+// Get current language from storage or default to 'en'
+let currentLanguage = 'en';
+
+// Helper function to get translation
+function t(key) {
+	return i18nResources[currentLanguage]?.[key] || i18nResources['en'][key] || key;
+}
+
+// Initialize language from storage
+chrome.storage.sync.get(['language'], (result) => {
+	if (result.language) {
+		currentLanguage = result.language;
+	}
+});
+
 chrome.action.onClicked.addListener(async (tab) => {
 	try {
-		await chrome.scripting.executeScript({
-			target: { tabId: tab.id },
-			func: initScreenshotSelector,
+		// Get current language and pass translations
+		chrome.storage.sync.get(['language'], async (result) => {
+			const lang = result.language || 'en';
+			await chrome.scripting.executeScript({
+				target: { tabId: tab.id },
+				func: initScreenshotSelector,
+				args: [i18nResources[lang]]
+			});
 		});
 	} catch (error) {
 		console.error("Failed to inject script:", error);
@@ -18,12 +47,17 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 	}
 });
 
-function initScreenshotSelector() {
+function initScreenshotSelector(translations) {
 	if (window.screenshotSelectorActive) {
 		return;
 	}
 
 	window.screenshotSelectorActive = true;
+
+	// Helper function to get translation
+	function t(key) {
+		return translations[key] || key;
+	}
 
 	let isSelecting = false;
 	let startX, startY, endX, endY;
@@ -154,7 +188,7 @@ function initScreenshotSelector() {
 				{ action: "captureScreenshot" },
 				async (response) => {
 					if (!response || !response.dataUrl) {
-						showMessage("Błąd podczas przechwytywania obrazu", "error");
+						showMessage(t("errorCapturingImage"), "error");
 						cleanup();
 						return;
 					}
@@ -180,7 +214,7 @@ function initScreenshotSelector() {
 								await showAIAnalysis(blob, x, y);
 							} catch (error) {
 								console.error("Failed to copy to clipboard:", error);
-								showMessage("Błąd kopiowania do schowka", "error");
+								showMessage(t("errorCopyingToClipboard"), "error");
 							}
 
 							cleanup();
@@ -188,7 +222,7 @@ function initScreenshotSelector() {
 					};
 
 					img.onerror = () => {
-						showMessage("Błąd ładowania obrazu", "error");
+						showMessage(t("errorLoadingImage"), "error");
 						cleanup();
 					};
 
@@ -197,7 +231,7 @@ function initScreenshotSelector() {
 			);
 		} catch (error) {
 			console.error("Capture failed:", error);
-			showMessage("Błąd podczas przechwytywania obrazu", "error");
+			showMessage(t("errorCapturingImage"), "error");
 			cleanup();
 		}
 	}
@@ -259,14 +293,14 @@ function initScreenshotSelector() {
         cursor: move;
         user-select: none;
       ">
-        <h3 style="margin: 0; color: white; font-size: 16px;">✨ Analiza AI</h3>
+        <h3 style="margin: 0; color: white; font-size: 16px;">${t("aiAnalysis")}</h3>
       </div>
       <div id="popup-content" style="
         padding: 20px;
         max-height: 400px;
         overflow-y: auto;
       ">
-        <div id="ai-loading" style="color: #666; margin-bottom: 15px;">Analizuję obraz...</div>
+        <div id="ai-loading" style="color: #666; margin-bottom: 15px;">${t("analyzingImage")}</div>
         <div id="ai-result" style="display: none; color: #333; line-height: 1.6; margin-bottom: 15px;"></div>
         <button id="close-ai-popup" style="
           background: #4285f4;
@@ -354,7 +388,7 @@ function initScreenshotSelector() {
 
 				if (!apiKey) {
 					popup.remove();
-					showMessage("Obraz skopiowany do schowka", "success");
+					showMessage(t("imageCopiedToClipboard"), "success");
 					return;
 				}
 
@@ -616,7 +650,7 @@ KRYTYCZNE ZASADY:
 		} catch (error) {
 			console.error("AI Analysis failed:", error);
 			popup.querySelector("#ai-loading").textContent =
-				"Błąd podczas analizy obrazu";
+				t("errorAnalyzingImage");
 		}
 	}
 
