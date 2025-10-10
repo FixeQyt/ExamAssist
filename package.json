@@ -1,7 +1,7 @@
 {
-	"name": "cbgc-extension",
-	"version": "1.0.0",
-	"description": "Chrome Browser Test Cheat Extension",
+	"name": "Screenshot Selector",
+	"version": "1.1.0",
+	"description": "Select an area on the page and copy it as an image to the clipboard",
 	"type": "module",
 	"scripts": {
 		"build": "node build.js",
@@ -10,7 +10,7 @@
 		"build:firefox:obfuscate": "node build.js --firefox --obfuscate"
 	},
 	"dependencies": {
-		"i18next": "^23.15.2"
+		"i18next": "^25.6.0"
 	},
 	"devDependencies": {
 		"esbuild": "^0.25.10",

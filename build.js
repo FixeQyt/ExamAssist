@@ -71,18 +71,63 @@ for (const entry of entryPoints) {
 	console.log(`✅ ${entry.out}.js complete\n`);
 }
 
-console.log("📋 Copying static files...");
+console.log("📋 Generating manifest...");
 
-// Copy the appropriate manifest file
-const manifestFile = isFirefox ? "manifest_firefox.json" : "manifest.json";
-if (fs.existsSync(manifestFile)) {
-	fs.copyFileSync(manifestFile, path.join(distDir, "manifest.json"));
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+const manifest = {
+	manifest_version: 3,
+	name: pkg.name,
+	version: pkg.version,
+	description: pkg.description,
+	author: "FixeQ",
+	incognito: "spanning",
+	permissions: ["activeTab", "scripting", "storage"],
+	host_permissions: ["https://text.pollinations.ai/*"],
+	action: {},
+	content_scripts: [
+		{
+			matches: ["https://*.testportal.pl/*", "https://*.testportal.net/*"],
+			js: ["content.js"],
+			run_at: "document_start",
+			all_frames: true
+		}
+	],
+	web_accessible_resources: [
+		{
+			resources: ["bypass-inject.js"],
+			matches: ["https://*.testportal.pl/*", "https://*.testportal.net/*"]
+		}
+	]
+};
+
+if (isFirefox) {
+	manifest.browser_specific_settings = {
+		gecko: {
+			id: "screenshot-selector@fixeqyt.github.io",
+			strict_min_version: "109.0"
+		}
+	};
+	manifest.background = {
+		scripts: ["background.js"]
+	};
+	manifest.options_ui = {
+		page: "options.html",
+		open_in_tab: true
+	};
+} else {
+	manifest.background = {
+		service_worker: "background.js"
+	};
+	manifest.options_page = "options.html";
 }
+
+fs.writeFileSync(path.join(distDir, "manifest.json"), JSON.stringify(manifest, null, 2));
+console.log("✅ Manifest generated\n");
 
 const staticFiles = [
 	"src/options.html",
 	"LICENSE",
-	"README.md",
 ];
 
 for (const file of staticFiles) {

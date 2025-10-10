@@ -32,12 +32,12 @@ jobs:
             - name: Install dependencies
               run: pnpm install
             
-            - name: Read version from manifest
+            - name: Read version from package.json
               id: get_version
               run: |
-                  VERSION=$(node -p "require('./manifest.json').version")
+                  VERSION=$(node -p "require('./package.json').version")
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
-                  echo "📦 Manifest version: $VERSION"
+                  echo "📦 Package version: $VERSION"
             
             - name: Build and obfuscate
               run: pnpm build:obfuscate
