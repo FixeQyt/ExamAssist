@@ -4,14 +4,16 @@ import fs from "fs";
 import path from "path";
 
 const shouldObfuscate = process.argv.includes("--obfuscate");
-const distDir = "dist";
+const isFirefox = process.argv.includes("--firefox");
+const distDir = isFirefox ? "dist-firefox" : "dist";
 
 if (fs.existsSync(distDir)) {
 	fs.rmSync(distDir, { recursive: true });
 }
 fs.mkdirSync(distDir);
 
-console.log("🏗️  Building Chrome Extension...\n");
+const browserName = isFirefox ? "Firefox" : "Chrome";
+console.log(`🏗️  Building ${browserName} Extension...\n`);
 
 const entryPoints = [
 	{ in: "src/background.js", out: "background" },
@@ -70,8 +72,14 @@ for (const entry of entryPoints) {
 }
 
 console.log("📋 Copying static files...");
+
+// Copy the appropriate manifest file
+const manifestFile = isFirefox ? "manifest_firefox.json" : "manifest.json";
+if (fs.existsSync(manifestFile)) {
+	fs.copyFileSync(manifestFile, path.join(distDir, "manifest.json"));
+}
+
 const staticFiles = [
-	"manifest.json",
 	"src/options.html",
 	"LICENSE",
 	"README.md",

@@ -42,12 +42,22 @@ jobs:
             - name: Build and obfuscate
               run: pnpm build:obfuscate
             
-            - name: Create ZIP package
+            - name: Build and obfuscate Firefox version
+              run: pnpm build:firefox:obfuscate
+            
+            - name: Create ZIP package for Chrome
               run: |
                   cd dist
-                  zip -r ../cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip .
+                  zip -r ../cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip .
                   cd ..
-                  echo "📦 Created: cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
+                  echo "📦 Created: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
+            
+            - name: Create XPI package for Firefox
+              run: |
+                  cd dist-firefox
+                  zip -r ../cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi .
+                  cd ..
+                  echo "📦 Created: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
             
             - name: Generate release notes
               id: release_notes
@@ -60,6 +70,10 @@ jobs:
                   - **Build:** ${{ github.run_number }}
                   - **Date:** $(date +'%Y-%m-%d %H:%M:%S UTC')
                   - **Commit:** ${{ github.sha }}
+                  
+                  ### 📦 Packages
+                  - **Chrome/Edge/Brave:** cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
+                  - **Firefox:** cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi
                   
                   ### 📝 Notes
                   ${{ github.event.inputs.release_notes }}
@@ -76,7 +90,9 @@ jobs:
                   tag_name: v${{ steps.get_version.outputs.version }}-${{ github.run_number }}
                   name: Release ${{ steps.get_version.outputs.version }}-${{ github.run_number }}
                   body_path: release_notes.md
-                  files: cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
+                  files: |
+                    cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
+                    cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi
                   draft: false
                   prerelease: false
               env:
@@ -85,5 +101,6 @@ jobs:
             - name: Success message
               run: |
                 echo "🎉 Release created successfully!"
-                echo "📦 Package: cbgc-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
+                echo "📦 Chrome Package: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
+                echo "📦 Firefox Package: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
                 echo "🏷️  Tag: v${{ steps.get_version.outputs.version }}-${{ github.run_number }}"
