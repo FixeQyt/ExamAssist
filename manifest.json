@@ -4,6 +4,7 @@
 	"version": "1.0.0",
 	"description": "Zaznacz obszar na stronie i skopiuj jako obraz do schowka",
 	"author": "fixeq",
+	"homepage_url": "https://fixeqyt.github.io",
 
 	"permissions": ["activeTab", "scripting", "storage"],
 
