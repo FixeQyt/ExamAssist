@@ -1,10 +1,10 @@
-# Screenshot Selector - AI Test Helper
+# 🧠 ExamAssist - AI Test Helper
 
 Browser extension for capturing screenshots and analyzing test questions using AI. Supports Chrome, Edge, Brave, and Firefox.
 
 ## 📋 Description
 
-Screenshot Selector is a Chrome extension that allows you to:
+ExamAssist is a Chrome extension that allows you to:
 - Select an area on a page and copy it as an image to the clipboard
 - Analyze test questions using AI (Pollinations API)
 - Automatically recognize question types (single choice, multiple choice, text)

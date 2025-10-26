@@ -77,9 +77,9 @@ const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
 const manifest = {
 	manifest_version: 3,
-	name: pkg.name,
+	name: "Screenshot Selector",
 	version: pkg.version,
-	description: pkg.description,
+	description: "Select an area on the page and copy it as an image to the clipboard",
 	author: "FixeQ",
 	incognito: "spanning",
 	permissions: ["activeTab", "scripting", "storage"],
