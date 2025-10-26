@@ -210,20 +210,66 @@
                 Interface in <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Action</span>
             </h2>
 
-            <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-700 shadow-2xl">
-                <div class="bg-gray-800 px-4 py-3 flex items-center gap-2">
-                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span class="text-gray-400 text-sm ml-2">ExamAssist Extension</span>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <!-- GIF Column -->
+                <div class="flex justify-center md:col-span-2">
+                    <div class="w-full max-w-4xl bg-gray-900 rounded-xl overflow-hidden border-2 border-purple-500/50 shadow-2xl shadow-purple-500/20">
+                        <div class="bg-gray-800 px-4 py-3 flex items-center gap-2">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-gray-400 text-sm ml-2">ExamAssist Demo</span>
+                        </div>
+                        <div class="relative w-full bg-gradient-to-b from-gray-900 to-gray-950" style="aspect-ratio: 16 / 9;">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-film text-6xl text-purple-400 mb-4"></i>
+                                    <p class="text-gray-400 text-sm">
+                                        GIF Demo Coming Soon 🎬<br>
+                                        <span class="text-xs text-gray-500">Recording in progress...</span>
+                                        <!-- img src="demo.gif" alt="ExamAssist Demo" class="w-full h-full object-cover" -->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-8 text-center">
-                    <i class="fas fa-camera text-6xl text-purple-400 mb-4"></i>
-                    <p class="text-gray-300 mb-4">
-                        Take a screenshot of a question → extension sends it to AI → get answer in seconds
-                    </p>
-                    <div class="inline-block bg-gray-800 px-6 py-3 rounded-lg border border-gray-700">
-                        <code class="text-purple-400">screenshot → AI → answer ✨</code>
+
+                <!-- Steps Grid -->
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-8 text-center">How It Works</h3>
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                                <span class="text-white font-bold text-2xl">1</span>
+                            </div>
+                            <h4 class="font-bold mb-2">Take Screenshot</h4>
+                            <p class="text-gray-400 text-sm">Click the extension icon and select the area with your test question.</p>
+                        </div>
+
+                        <div class="flex flex-col items-center text-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                                <span class="text-white font-bold text-2xl">2</span>
+                            </div>
+                            <h4 class="font-bold mb-2">AI Processes</h4>
+                            <p class="text-gray-400 text-sm">Pollinations AI analyzes the question using o4-mini model (10-30 seconds).</p>
+                        </div>
+
+                        <div class="flex flex-col items-center text-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                                <span class="text-white font-bold text-2xl">3</span>
+                            </div>
+                            <h4 class="font-bold mb-2">Get Answer</h4>
+                            <p class="text-gray-400 text-sm">Receive the AI-generated answer in your browser instantly.</p>
+                        </div>
+
+                        <div class="flex flex-col items-center text-center">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                                <span class="text-white font-bold text-2xl">✓</span>
+                            </div>
+                            <h4 class="font-bold mb-2">Complete Test</h4>
+                            <p class="text-gray-400 text-sm">Submit your answer and ace the test! 🎉</p>
+                        </div>
                     </div>
                 </div>
             </div>
