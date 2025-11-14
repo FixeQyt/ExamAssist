@@ -6,6 +6,86 @@ import path from "path";
 const shouldObfuscate = process.argv.includes("--obfuscate");
 const isFirefox = process.argv.includes("--firefox");
 const distDir = isFirefox ? "dist-firefox" : "dist";
+const srcDir = "src";
+
+const obfuscationOptions = {
+	compact: true,
+	simplify: true,
+	identifierNamesGenerator: "mangled-shuffled",
+	renameGlobals: false,
+	stringArray: true,
+	stringArrayEncoding: ["rc4"],
+	stringArrayThreshold: 1,
+	stringArrayRotate: true,
+	stringArrayShuffle: true,
+	stringArrayWrappersCount: 1,
+	stringArrayWrappersChainedCalls: false,
+	stringArrayWrappersParametersMaxCount: 2,
+	stringArrayWrappersType: "variable",
+	stringArrayIndexShift: true,
+	stringArrayCallsTransform: true,
+	stringArrayCallsTransformThreshold: 0.5,
+	splitStrings: true,
+	splitStringsChunkLength: 10,
+	unicodeEscapeSequence: false,
+	selfDefending: false,
+	debugProtection: false,
+	debugProtectionInterval: 0,
+	disableConsoleOutput: false,
+	numbersToExpressions: true,
+	transformObjectKeys: true,
+	controlFlowFlattening: true,
+	controlFlowFlatteningThreshold: 0.25,
+	deadCodeInjection: true,
+	deadCodeInjectionThreshold: 0.05,
+	log: false,
+	reservedNames: [
+		"^chrome$",
+		"^window$",
+		"^document$",
+		"^navigator$",
+		"^console$",
+	],
+};
+
+function findJsEntryFiles(baseDir) {
+	const entries = [];
+
+	function walk(currentDir) {
+		const dirItems = fs.readdirSync(currentDir, { withFileTypes: true });
+		for (const item of dirItems) {
+			const absolutePath = path.join(currentDir, item.name);
+			if (item.isDirectory()) {
+				walk(absolutePath);
+				continue;
+			}
+
+			if (!item.isFile() || path.extname(absolutePath) !== ".js") {
+				continue;
+			}
+
+			entries.push(absolutePath);
+		}
+	}
+
+	walk(baseDir);
+	return entries;
+}
+
+function deriveOutputName(filePath) {
+	const relativePath = path.relative(srcDir, filePath).replace(/\\/g, "/");
+	const segments = relativePath.split("/");
+	const fileName = segments[segments.length - 1];
+
+	if (fileName === "index.js") {
+		if (segments.length === 1) {
+			return "index";
+		}
+		return segments.slice(0, -1).join("-");
+	}
+
+	return relativePath.replace(/\.js$/, "").replace(/\//g, "-");
+}
 
 if (fs.existsSync(distDir)) {
 	fs.rmSync(distDir, { recursive: true });
@@ -15,19 +95,40 @@ fs.mkdirSync(distDir);
 const browserName = isFirefox ? "Firefox" : "Chrome";
 console.log(`🏗️  Building ${browserName} Extension...\n`);
 
-const entryPoints = [
-	{ in: "src/background.js", out: "background" },
-	{ in: "src/content.js", out: "content" },
-	{ in: "src/bypass-inject.js", out: "bypass-inject" },
-	{ in: "src/options.js", out: "options" },
-	{ in: "src/selector/index.js", out: "selector" },
-];
+const entryFiles = findJsEntryFiles(srcDir);
 
-for (const entry of entryPoints) {
-	console.log(`📦 Building ${entry.in}...`);
+if (!entryFiles.length) {
+	console.error("❌ No .js entry files found under src/. Nothing to build.");
+	process.exit(1);
+}
+
+const entryConfigs = entryFiles.map((filePath) => {
+	return {
+		input: filePath,
+		output: deriveOutputName(filePath),
+	};
+});
+
+const seenOutputs = new Set();
+for (const cfg of entryConfigs) {
+	const outputFileName = `${cfg.output}.js`;
+	if (seenOutputs.has(outputFileName)) {
+		throw new Error(
+			`Duplicate output file detected for ${outputFileName}.`,
+		);
+	}
+	seenOutputs.add(outputFileName);
+}
+
+const builtFiles = [];
+
+for (const entry of entryConfigs) {
+	const relativeInput = path.relative(".", entry.input);
+	const outputFileName = `${entry.output}.js`;
+	console.log(`📦 Building ${relativeInput} -> ${outputFileName}...`);
 
 	const result = await esbuild.build({
-		entryPoints: [entry.in],
+		entryPoints: [entry.input],
 		bundle: true,
 		minify: false,
 		format: "iife",
@@ -35,41 +136,35 @@ for (const entry of entryPoints) {
 		write: false,
 	});
 
-	let code = result.outputFiles[0].text;
+	builtFiles.push({
+		fileName: outputFileName,
+		code: result.outputFiles[0].text,
+	});
+}
 
-	if (shouldObfuscate) {
-		console.log(`🔒 Obfuscating ${entry.out}.js...`);
+let finalFiles = builtFiles;
 
-		const obfuscationResult = JavaScriptObfuscator.obfuscate(code, {
-			compact: true,
-			simplify: true,
-			identifierNamesGenerator: "hexadecimal",
-			renameGlobals: false,
-			stringArray: false,
-			splitStrings: true,
-			splitStringsChunkLength: 10,
-			unicodeEscapeSequence: false,
-			selfDefending: false,
-			debugProtection: false,
-			disableConsoleOutput: false,
-			numbersToExpressions: true,
-			transformObjectKeys: false,
-			controlFlowFlattening: false,
-			deadCodeInjection: false,
-			reservedNames: [
-				"^chrome$",
-				"^window$",
-				"^document$",
-				"^navigator$",
-				"^console$",
-			],
-		});
+if (shouldObfuscate) {
+	console.log("🔒 Obfuscating bundles...");
+	const sourceCodeMap = builtFiles.reduce((acc, file) => {
+		acc[file.fileName] = file.code;
+		return acc;
+	}, {});
 
-		code = obfuscationResult.getObfuscatedCode();
-	}
+	const obfuscationResults = JavaScriptObfuscator.obfuscateMultiple(
+		sourceCodeMap,
+		obfuscationOptions,
+	);
 
-	fs.writeFileSync(`${distDir}/${entry.out}.js`, code);
-	console.log(`✅ ${entry.out}.js complete\n`);
+	finalFiles = builtFiles.map((file) => ({
+		fileName: file.fileName,
+		code: obfuscationResults[file.fileName].getObfuscatedCode(),
+	}));
+}
+
+for (const file of finalFiles) {
+	fs.writeFileSync(path.join(distDir, file.fileName), file.code);
+	console.log(`✅ ${file.fileName} complete\n`);
 }
 
 console.log("📋 Generating manifest...");
