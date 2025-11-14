@@ -9,49 +9,60 @@ function createPopupShell(t, x, y) {
 		position: fixed;
 		left: ${x}px;
 		top: ${y}px;
-		width: 400px;
-		min-width: 300px;
-		max-width: 800px;
-		background: white;
-		border-radius: 12px;
+		width: 420px;
+		min-width: 280px;
+		max-width: 640px;
+		background: rgba(255, 255, 255, 0.18);
+		border-radius: 18px;
 		padding: 0;
-		box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+		box-shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
 		z-index: 1000002;
 		font-family: Arial, sans-serif;
 		cursor: move;
-		transition: all 0.3s ease;
-		opacity: 0.15;
-		transform: scale(0.8);
+		transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+		opacity: 0.25;
+		transform: translateY(12px) scale(0.97);
 		resize: both;
 		overflow: hidden;
+		backdrop-filter: blur(24px) saturate(140%);
+		border: 1px solid rgba(255, 255, 255, 0.45);
+		outline: 1px solid rgba(15, 23, 42, 0.08);
 	`;
 
 	popup.innerHTML = `
 		<div id="popup-header" style="
-			padding: 15px 20px;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			border-radius: 12px 12px 0 0;
+			padding: 18px 22px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.05) 100%);
+			border-radius: 18px 18px 0 0;
 			cursor: move;
 			user-select: none;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 		">
-			<h3 style="margin: 0; color: white; font-size: 16px;">${t("aiAnalysis")}</h3>
+			<h3 style="margin: 0; color: #0f172a; font-size: 15px; letter-spacing: 0.02em;">${t("aiAnalysis")}</h3>
+			<span style="font-size: 11px; color: rgba(15, 23, 42, 0.6); text-transform: uppercase; letter-spacing: 0.15em;">AI</span>
 		</div>
 		<div id="popup-content" style="
-			padding: 20px;
-			max-height: 400px;
+			padding: 22px;
+			max-height: 420px;
 			overflow-y: auto;
+			background: radial-gradient(circle at top, rgba(255,255,255,0.35), rgba(248,250,252,0.4));
 		">
-			<div id="ai-loading" style="color: #666; margin-bottom: 15px;">${t("analyzingImage")}</div>
-			<div id="ai-result" style="display: none; color: #333; line-height: 1.6; margin-bottom: 15px;"></div>
+			<div id="ai-loading" style="color: rgba(15, 23, 42, 0.65); margin-bottom: 15px; font-size: 13px;">${t("analyzingImage")}</div>
+			<div id="ai-result" style="display: none; color: #0f172a; line-height: 1.65; margin-bottom: 15px;"></div>
 			<button id="close-ai-popup" style="
-				background: #4285f4;
+				background: rgba(15, 23, 42, 0.85);
 				color: white;
-				border: none;
-				padding: 8px 16px;
-				border-radius: 6px;
+				border: 1px solid rgba(255, 255, 255, 0.25);
+				padding: 10px 16px;
+				border-radius: 999px;
 				cursor: pointer;
-				font-size: 14px;
+				font-size: 13px;
 				width: 100%;
+				letter-spacing: 0.03em;
+				transition: background 0.2s ease, box-shadow 0.2s ease;
 			">${t("close") || "Close"}</button>
 		</div>
 	`;
@@ -67,21 +78,26 @@ function setupPopupInteractions(popup) {
 	let offsetY = 0;
 
 	popup.addEventListener("mouseenter", () => {
-		popup.style.opacity = "1";
-		popup.style.transform = "scale(1)";
-		popup.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4)";
+		popup.style.pointerEvents = "auto";
+		popup.style.opacity = "0.95";
+		popup.style.transform = "translateY(0) scale(1)";
+		popup.style.boxShadow = "0 35px 90px rgba(15,23,42,0.35)";
 	});
 
 	popup.addEventListener("mouseleave", () => {
 		if (!hasBeenHovered) {
-			popup.style.opacity = "0.15";
-			popup.style.transform = "scale(0.8)";
-			popup.style.boxShadow = "0 2px 12px rgba(0,0,0,0.2)";
+			popup.style.opacity = "0.45";
+			popup.style.transform = "translateY(8px) scale(0.99)";
+			popup.style.boxShadow = "0 18px 40px rgba(15,23,42,0.25)";
 			hasBeenHovered = true;
 		} else {
 			popup.style.opacity = "0";
-			popup.style.transform = "scale(0.7)";
-			popup.style.boxShadow = "none";
+			popup.style.transform = "translateY(18px) scale(0.93)";
+			popup.style.boxShadow = "0 6px 16px rgba(15,23,42,0.15)";
+			popup.style.pointerEvents = "none";
+			setTimeout(() => {
+				popup.style.pointerEvents = "auto";
+			}, 200);
 		}
 	});
 
@@ -126,6 +142,16 @@ function setupPopupInteractions(popup) {
 	popup.querySelector("#close-ai-popup").addEventListener("click", () => {
 		popup.remove();
 	});
+
+	const closeButton = popup.querySelector("#close-ai-popup");
+	closeButton.addEventListener("mouseenter", () => {
+		closeButton.style.background = "rgba(15, 23, 42, 0.95)";
+		closeButton.style.boxShadow = "0 10px 30px rgba(15,23,42,0.35)";
+	});
+	closeButton.addEventListener("mouseleave", () => {
+		closeButton.style.background = "rgba(15, 23, 42, 0.85)";
+		closeButton.style.boxShadow = "none";
+	});
 }
 
 function sanitizeJSON(rawContent) {
@@ -141,13 +167,13 @@ function renderTextFallback(t, popup, rawContent) {
 	const resultDiv = popup.querySelector("#ai-result");
 	resultDiv.style.display = "block";
 	resultDiv.innerHTML = `
-		<div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-			<div style="font-size: 11px; color: #92400e; font-weight: 600; margin-bottom: 6px;">
+		<div style="background: rgba(251, 191, 36, 0.18); border: 1px solid rgba(245, 158, 11, 0.4); padding: 14px; border-radius: 12px; margin-bottom: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);">
+			<div style="font-size: 11px; color: rgba(146, 64, 14, 0.8); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em;">
 				${t("aiTextResponseWarning")}
 			</div>
 		</div>
-		<div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 6px;">
-			<div style="color: #1e293b; font-size: 13px; white-space: pre-wrap; word-break: break-word; line-height: 1.6;">
+		<div style="background: rgba(248, 250, 252, 0.35); border: 1px solid rgba(148, 163, 184, 0.45); padding: 14px; border-radius: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);">
+			<div style="color: #0f172a; font-size: 13px; white-space: pre-wrap; word-break: break-word; line-height: 1.65;">
 				${rawContent}
 			</div>
 		</div>
@@ -159,13 +185,13 @@ function renderIncompleteJSON(popup, parsedData) {
 	const resultDiv = popup.querySelector("#ai-result");
 	resultDiv.style.display = "block";
 	resultDiv.innerHTML = `
-		<div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-			<div style="font-size: 11px; color: #92400e; font-weight: 600; margin-bottom: 6px;">
+		<div style="background: rgba(248, 113, 113, 0.2); border: 1px solid rgba(248, 113, 113, 0.4); padding: 14px; border-radius: 14px; margin-bottom: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);">
+			<div style="font-size: 11px; color: rgba(127, 29, 29, 0.85); font-weight: 600; margin-bottom: 6px; letter-spacing: 0.08em;">
 				⚠️ NIEPEŁNY JSON
 			</div>
 		</div>
-		<div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 6px;">
-			<div style="color: #1e293b; font-size: 13px; white-space: pre-wrap; word-break: break-word; line-height: 1.6;">
+		<div style="background: rgba(15, 23, 42, 0.08); border: 1px solid rgba(148, 163, 184, 0.4); padding: 14px; border-radius: 16px;">
+			<div style="color: #0f172a; font-size: 13px; white-space: pre-wrap; word-break: break-word; line-height: 1.65;">
 				${JSON.stringify(parsedData, null, 2)}
 			</div>
 		</div>
@@ -200,13 +226,14 @@ function buildAnswerHTML(parsedData, t) {
 						align-items: flex-start;
 						gap: 8px;
 						margin-bottom: 6px;
-						padding: 8px;
-						background: #f0fdf4;
-						border-radius: 6px;
-						border: 1px solid #bbf7d0;
+						padding: 10px;
+						background: rgba(34, 197, 94, 0.15);
+						border-radius: 12px;
+						border: 1px solid rgba(134, 239, 172, 0.5);
+						box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
 					">
 						<span style="color: #22c55e; font-size: 16px; flex-shrink: 0; margin-top: 1px;">✓</span>
-						<span style="color: #1e293b; font-size: 13px; line-height: 1.4;">${ans}</span>
+						<span style="color: #022c22; font-size: 13px; line-height: 1.5;">${ans}</span>
 					</div>
 				`,
 			)
@@ -215,10 +242,14 @@ function buildAnswerHTML(parsedData, t) {
 
 	return `
 		<div style="
-			color: #1e293b;
+			color: #052e16;
 			font-size: 14px;
 			font-weight: 600;
 			margin-bottom: 8px;
+			padding: 10px 12px;
+			background: rgba(255,255,255,0.25);
+			border-radius: 12px;
+			border: 1px solid rgba(15, 23, 42, 0.08);
 		">
 			${parsedData.answer}
 		</div>
@@ -241,25 +272,27 @@ function renderResult(popup, parsedData, t) {
 
 	resultDiv.innerHTML = `
 		<div style="
-			background: #f0f9ff;
-			border-left: 4px solid #0ea5e9;
-			padding: 12px;
-			border-radius: 6px;
+			background: rgba(14, 165, 233, 0.16);
+			border: 1px solid rgba(14, 165, 233, 0.35);
+			padding: 16px;
+			border-radius: 16px;
 			margin-bottom: 12px;
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 		">
-			<div style="font-size: 11px; color: #0369a1; font-weight: 600; margin-bottom: 6px;">
+			<div style="font-size: 11px; color: rgba(3, 105, 161, 0.85); font-weight: 600; margin-bottom: 6px; letter-spacing: 0.08em; text-transform: uppercase;">
 				${t("aiQuestionLabel")}
 			</div>
-			<div style="color: #1e293b; font-size: 13px;">
+			<div style="color: #0f172a; font-size: 13px;">
 				${parsedData.question}
 			</div>
 		</div>
 		<div style="
-			background: #f0fdf4;
-			border-left: 4px solid #22c55e;
-			padding: 12px;
-			border-radius: 6px;
+			background: rgba(34, 197, 94, 0.18);
+			border: 1px solid rgba(34, 197, 94, 0.35);
+			padding: 16px;
+			border-radius: 18px;
 			margin-bottom: 10px;
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 		">
 			<div style="
 				display: flex;
@@ -267,21 +300,22 @@ function renderResult(popup, parsedData, t) {
 				gap: 8px;
 				margin-bottom: ${parsedData.answer_type === "multi_select" ? "12px" : "8px"};
 			">
-				<span style="font-size: 20px;">✓</span>
-				<span style="font-size: 11px; color: #15803d; font-weight: 600;">
+				<span style="font-size: 20px; color: #14532d;">✓</span>
+				<span style="font-size: 11px; color: rgba(21, 128, 61, 0.85); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">
 					${t("aiAnswerLabel")}
 				</span>
 			</div>
 			${answerHTML}
 			<div style="
 				display: inline-block;
-				background: #dcfce7;
-				color: #15803d;
-				padding: 4px 10px;
-				border-radius: 12px;
+				background: rgba(15, 23, 42, 0.1);
+				color: #064e3b;
+				padding: 5px 12px;
+				border-radius: 999px;
 				font-size: 11px;
 				font-weight: 500;
 				margin-top: 8px;
+				border: 1px solid rgba(15, 23, 42, 0.12);
 			">
 				${answerTypeBadge}
 			</div>
