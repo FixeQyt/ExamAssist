@@ -20,6 +20,7 @@ const entryPoints = [
 	{ in: "src/content.js", out: "content" },
 	{ in: "src/bypass-inject.js", out: "bypass-inject" },
 	{ in: "src/options.js", out: "options" },
+	{ in: "src/selector/index.js", out: "selector" },
 ];
 
 for (const entry of entryPoints) {
