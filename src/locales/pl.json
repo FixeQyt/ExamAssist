@@ -9,6 +9,16 @@
   "pleaseEnterApiKey": "Proszę wpisać API key",
   "polish": "Polski",
   "english": "Angielski",
+  "model": "Model",
+  "loading": "Ładowanie...",
+  "modelInfo": "Informacje o modelu",
+  "modelInfoTier": "Tier",
+  "modelInfoDescription": "Opis",
+  "modelInfoInputModalities": "Modalności wejścia",
+  "modelInfoOutputModalities": "Modalności wyjścia",
+  "modelSaved": "Model zapisany pomyślnie!",
+  "errorFetchingModels": "Błąd pobierania listy modeli",
+  "refreshModels": "Odśwież modele",
   "errorCapturingImage": "Błąd podczas przechwytywania obrazu",
   "errorCopyingToClipboard": "Błąd kopiowania do schowka",
   "errorLoadingImage": "Błąd ładowania obrazu",
@@ -26,4 +36,6 @@
   "aiAnswerTypeSelectOne": "☑️ Jednokrotny wybór",
   "aiAnswerTypeMultiSelect": "✅ Wielokrotny wybór",
   "aiAnswerTypeUnknown": "❓ Nieznany"
+  ,"aiEnabled": "AI włączone"
+  ,"aiDisabled": "AI wyłączone"
 }

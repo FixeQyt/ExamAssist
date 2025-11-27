@@ -325,16 +325,21 @@ function renderResult(popup, parsedData, t) {
 
 export async function showAIAnalysis(imageBlob, x, y, t) {
 	let apiKey;
+	let model;
+	let aiEnabled = false;
 	try {
 		const storageData = await new Promise((resolve) => {
-			browserAPI.storage.sync.get(["pollinationsApiKey"], resolve);
+			browserAPI.storage.sync.get(["pollinationsApiKey", "selectedModel", "pollinationsModelName", "aiEnabled"], resolve);
 		});
-		apiKey = storageData?.pollinationsApiKey;
+	apiKey = storageData?.pollinationsApiKey;
+	model = storageData?.selectedModel || storageData?.pollinationsModelName || "openai";
+	aiEnabled = !!storageData?.aiEnabled;
 	} catch (err) {
-		console.error("Failed to read API key from storage:", err);
+		console.error("Failed to read API key or model from storage:", err);
+	model = "openai";
 	}
 
-	if (!apiKey) {
+	if (!aiEnabled) {
 		showMessage(t("imageCopiedToClipboard"), "success");
 		return;
 	}
@@ -350,16 +355,32 @@ export async function showAIAnalysis(imageBlob, x, y, t) {
 			reader.readAsDataURL(imageBlob);
 		});
 
+		if (!apiKey) {
+			try {
+				const modelsResp = await fetch("https://text.pollinations.ai/models");
+				if (modelsResp.ok) {
+					const modelsList = await modelsResp.json();
+					const selectedModelInfo = modelsList.find((m) => m.name === model);
+					if (selectedModelInfo?.tier !== "anonymous") {
+						showMessage(t("pleaseEnterApiKey"), "error");
+						return;
+					}
+				}
+			} catch (err) {
+				console.warn("Model check failed, proceeding without API key check:", err);
+			}
+		}
+
 		const response = await fetch(
 			"https://text.pollinations.ai/openai/v1/chat/completions",
 			{
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${apiKey}`,
+					...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
 				},
 				body: JSON.stringify({
-					model: "o4-mini",
+					model,
 					messages: [
 						{
 							role: "system",

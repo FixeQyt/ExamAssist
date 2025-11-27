@@ -75,14 +75,18 @@ npm run build:firefox:obfuscate
 
 ## ⚙️ Configuration
 
-### API Key (Pollinations)
+### Enabling AI
 
-1. Right-click the extension icon and select "Options"
-2. Enter your Pollinations API key
-3. Select your preferred interface language (Polish/English)
-4. Click "Save"
+By default, AI features are turned off to keep the extension discreet and minimal. To enable AI analysis:
 
-**Note**: Without an API key, the extension will only copy images to the clipboard without AI analysis.
+1. Right-click the extension icon and select "Options".
+2. In the bottom-right corner of the Options page there's a subtle AI toggle (a small floating control).
+   - Hover to reveal it and click to turn on AI features.
+3. When AI is enabled, the Model dropdown and (if required) the API Key fields become available.
+   - If the selected model's tier requires an API key (e.g. "seed"), you'll need to enter it to use that model.
+4. If the toggle is off, the extension will act as a standard screenshot tool and simply copy the cropped image to your clipboard.
+
+If you want AI to be enabled automatically on install, you can toggle it on in the Options page after installing the extension.
 
 ### Language Selection
 
@@ -188,7 +192,7 @@ npm run build:firefox:obfuscate
 
 The extension uses Pollinations API for image analysis:
 - **Endpoint**: `https://text.pollinations.ai/openai/v1/chat/completions`
-- **Model**: `o4-mini`
+- **Model**: `openai` (If I'm right then it's `OpenAI GPT-5 Nano`)
 - **Format**: OpenAI-compatible API
 
 ## 🐛 Troubleshooting

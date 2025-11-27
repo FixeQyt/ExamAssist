@@ -1,6 +1,7 @@
+import { browserAPI } from "./selector/browserApi.js";
+
 (() => {
 	// Cross-browser compatibility
-	const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
 	
 	const script = document.createElement("script");
 	script.src = browserAPI.runtime.getURL("bypass-inject.js");

@@ -9,6 +9,16 @@
   "pleaseEnterApiKey": "Please enter API key",
   "polish": "Polish",
   "english": "English",
+  "model": "Model",
+  "loading": "Loading...",
+  "modelInfo": "Model information",
+  "modelInfoTier": "Tier",
+  "modelInfoDescription": "Description",
+  "modelInfoInputModalities": "Input modalities",
+  "modelInfoOutputModalities": "Output modalities",
+  "modelSaved": "Model saved successfully!",
+  "errorFetchingModels": "Error fetching model list",
+  "refreshModels": "Refresh models",
   "errorCapturingImage": "Error capturing image",
   "errorCopyingToClipboard": "Error copying to clipboard",
   "errorLoadingImage": "Error loading image",
@@ -26,4 +36,6 @@
   "aiAnswerTypeSelectOne": "☑️ Single Choice",
   "aiAnswerTypeMultiSelect": "✅ Multiple Choice",
   "aiAnswerTypeUnknown": "❓ Unknown"
+  ,"aiEnabled": "AI enabled"
+  ,"aiDisabled": "AI disabled"
 }

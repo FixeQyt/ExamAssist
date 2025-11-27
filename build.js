@@ -223,13 +223,41 @@ console.log("✅ Manifest generated\n");
 
 const staticFiles = [
 	"src/options.html",
+	"src/options/style.css",
 	"LICENSE",
 ];
 
 for (const file of staticFiles) {
-	if (fs.existsSync(file)) {
-		const fileName = path.basename(file);
-		fs.copyFileSync(file, path.join(distDir, fileName));
+	if (!fs.existsSync(file)) continue;
+	const fileName = path.basename(file);
+	
+	// Preserve directory structure for nested files
+	let destPath;
+	if (file.includes('options/')) {
+		const optionsDir = path.join(distDir, 'options');
+		if (!fs.existsSync(optionsDir)) {
+			fs.mkdirSync(optionsDir, { recursive: true });
+		}
+		destPath = path.join(distDir, file.replace('src/', ''));
+	} else {
+		destPath = path.join(distDir, fileName);
+	}
+
+	if (fileName.endsWith('.html')) {
+		let content = fs.readFileSync(file, 'utf8');
+		for (const cfg of entryConfigs) {
+			const rel = path.relative(srcDir, cfg.input).replace(/\\/g, '/');
+			const outName = `${cfg.output}.js`;
+			content = content.split(`src="${rel}"`).join(`src="${outName}"`);
+			content = content.split(`src='${rel}'`).join(`src='${outName}'`);
+			content = content.split(`src="./${rel}"`).join(`src="${outName}"`);
+			content = content.split(`src='./${rel}'`).join(`src='${outName}'`);
+			content = content.split(`src="/${rel}"`).join(`src="${outName}"`);
+			content = content.split(`src='/${rel}'`).join(`src='${outName}'`);
+		}
+		fs.writeFileSync(destPath, content);
+	} else {
+		fs.copyFileSync(file, destPath);
 	}
 }
 
