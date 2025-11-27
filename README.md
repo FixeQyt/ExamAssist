@@ -5,6 +5,7 @@ Browser extension for capturing screenshots and analyzing test questions using A
 ## 📋 Description
 
 ExamAssist is a Chrome extension that allows you to:
+
 - Select an area on a page and copy it as an image to the clipboard
 - Analyze test questions using AI (Pollinations API)
 - Automatically recognize question types (single choice, multiple choice, text)
@@ -23,18 +24,21 @@ ExamAssist is a Chrome extension that allows you to:
 ## 🚀 Installation
 
 ### Requirements
+
 - Node.js (version 16 or newer)
 - Chrome/Edge/Brave (supported Chromium browsers) OR Firefox (version 109 or newer)
 
 ### Installation Steps
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/FixeQyt/ai-cheat.git
 cd ai-cheat
 ```
 
 2. **Install dependencies**
+
 ```bash
 npm install
 ```
@@ -42,6 +46,7 @@ npm install
 3. **Build the extension**
 
 **For Chrome/Edge/Brave:**
+
 ```bash
 # Standard build
 npm run build
@@ -51,6 +56,7 @@ npm run build:obfuscate
 ```
 
 **For Firefox:**
+
 ```bash
 # Standard build
 npm run build:firefox
@@ -62,16 +68,18 @@ npm run build:firefox:obfuscate
 4. **Load into browser**
 
 **Chrome/Edge/Brave:**
-   - Open `chrome://extensions/`
-   - Enable "Developer mode"
-   - Click "Load unpacked"
-   - Select the `dist` folder from the project
+
+- Open `chrome://extensions/`
+- Enable "Developer mode"
+- Click "Load unpacked"
+- Select the `dist` folder from the project
 
 **Firefox:**
-   - Open `about:debugging#/runtime/this-firefox`
-   - Click "Load Temporary Add-on"
-   - Navigate to the `dist-firefox` folder and select the `manifest.json` file
-   - **Note**: In Firefox, temporary add-ons are removed when you close the browser. For permanent installation, you need to sign the extension through Mozilla Add-ons.
+
+- Open `about:debugging#/runtime/this-firefox`
+- Click "Load Temporary Add-on"
+- Navigate to the `dist-firefox` folder and select the `manifest.json` file
+- **Note**: In Firefox, temporary add-ons are removed when you close the browser. For permanent installation, you need to sign the extension through Mozilla Add-ons.
 
 ## ⚙️ Configuration
 
@@ -81,9 +89,9 @@ By default, AI features are turned off to keep the extension discreet and minima
 
 1. Right-click the extension icon and select "Options".
 2. In the bottom-right corner of the Options page there's a subtle AI toggle (a small floating control).
-   - Hover to reveal it and click to turn on AI features.
+    - Hover to reveal it and click to turn on AI features.
 3. When AI is enabled, the Model dropdown and (if required) the API Key fields become available.
-   - If the selected model's tier requires an API key (e.g. "seed"), you'll need to enter it to use that model.
+    - If the selected model's tier requires an API key (e.g. "seed"), you'll need to enter it to use that model.
 4. If the toggle is off, the extension will act as a standard screenshot tool and simply copy the cropped image to your clipboard.
 
 If you want AI to be enabled automatically on install, you can toggle it on in the Options page after installing the extension.
@@ -93,11 +101,13 @@ Note: Not all AI models require an API key - some models are public/anonymous an
 ### Language Selection
 
 The extension supports full internationalization (i18n):
+
 - **UI Language**: All interface elements (buttons, labels, messages) are translated
 - **AI Prompts**: The AI system receives instructions in the selected language
 - **AI Responses**: The AI provides answers in the selected language
 
 Supported languages:
+
 - **Polish (Polski)**: Full UI and AI prompts in Polish
 - **English**: Full UI and AI prompts in English
 
@@ -110,18 +120,19 @@ To change the language, go to the Options page and select your preferred languag
 1. **Click the extension icon** in the Chrome toolbar
 2. **Select an area** on the page you want to capture
 3. **Automatic analysis**: If you have an API key configured, you'll receive:
-   - Detected question
-   - Answer type
-   - Suggested answer
+    - Detected question
+    - Answer type
+    - Suggested answer
 
 ### AI Analysis Result
 
 The extension returns data in JSON format:
+
 ```json
 {
-  "question": "detected question",
-  "answer_type": "text|select_one|multi_select",
-  "answer": "answer"
+	"question": "detected question",
+	"answer_type": "text|select_one|multi_select",
+	"answer": "answer"
 }
 ```
 
@@ -154,6 +165,7 @@ ai-cheat/
 ## 🔨 Build Scripts
 
 **Chrome/Edge/Brave:**
+
 ```bash
 # Build without obfuscation
 npm run build
@@ -163,6 +175,7 @@ npm run build:obfuscate
 ```
 
 **Firefox:**
+
 ```bash
 # Build without obfuscation
 npm run build:firefox
@@ -183,9 +196,9 @@ npm run build:firefox:obfuscate
 
 - **API Key**: Stored securely in Browser Storage API (Chrome Storage API / Firefox Storage API)
 - **Permissions**: Extension requires minimal permissions:
-  - `activeTab`: Access to active tab
-  - `scripting`: Script injection
-  - `storage`: API key storage
+    - `activeTab`: Access to active tab
+    - `scripting`: Script injection
+    - `storage`: API key storage
 - **Host Permissions**: Access only to testportal.pl/net and Pollinations API
 
 ## 📝 API
@@ -193,6 +206,7 @@ npm run build:firefox:obfuscate
 ### Pollinations AI API
 
 The extension uses Pollinations API for image analysis:
+
 - **Endpoint**: `https://text.pollinations.ai/openai/v1/chat/completions`
 - **Model**: `openai` (If I'm right then it's `OpenAI GPT-5 Nano`)
 - **Format**: OpenAI-compatible API
@@ -200,17 +214,20 @@ The extension uses Pollinations API for image analysis:
 ## 🐛 Troubleshooting
 
 ### Extension Not Working
+
 1. **Chrome/Edge/Brave**: Check if the extension is enabled in `chrome://extensions/`
 2. **Firefox**: Check if the extension is enabled in `about:addons`
 3. Reload the page after installing the extension
 4. Check the browser console (F12) for errors
 
 ### AI Not Returning Answers
+
 1. Check if you have an API key configured in options
 2. Check your internet connection
 3. Verify that the API key is correct
 
 ### Image Not Being Copied
+
 1. Check clipboard permissions in the browser
 2. Try selecting a larger area (min. 10x10 px)
 

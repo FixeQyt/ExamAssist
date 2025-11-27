@@ -10,7 +10,7 @@ const OVERLAY_STYLE = `
 	cursor: crosshair;
 	z-index: 999999;
 	pointer-events: all;
-`;
+`
 
 const SELECTION_STYLE = `
 	position: fixed;
@@ -21,17 +21,17 @@ const SELECTION_STYLE = `
 	background: rgba(0, 150, 255, 0.05);
 	box-shadow: 0 0 0 1px red;
 	animation: rainbow-border 2s linear infinite;
-`;
+`
 
-const RAINBOW_STYLE_ID = "rainbow-animation-style";
+const RAINBOW_STYLE_ID = 'rainbow-animation-style'
 
 function ensureRainbowStyle() {
 	if (document.getElementById(RAINBOW_STYLE_ID)) {
-		return;
+		return
 	}
 
-	const style = document.createElement("style");
-	style.id = RAINBOW_STYLE_ID;
+	const style = document.createElement('style')
+	style.id = RAINBOW_STYLE_ID
 	style.textContent = `
 		@keyframes rainbow-border {
 			0% {
@@ -59,32 +59,32 @@ function ensureRainbowStyle() {
 				box-shadow: 0 0 0 1px red;
 			}
 		}
-	`;
+	`
 
-	document.head.appendChild(style);
+	document.head.appendChild(style)
 }
 
 export function createOverlayElements() {
-	ensureRainbowStyle();
+	ensureRainbowStyle()
 
-	const overlay = document.createElement("div");
-	overlay.style.cssText = OVERLAY_STYLE;
+	const overlay = document.createElement('div')
+	overlay.style.cssText = OVERLAY_STYLE
 
-	const selectionDiv = document.createElement("div");
-	selectionDiv.className = "screenshot-selection-box";
-	selectionDiv.style.cssText = SELECTION_STYLE;
+	const selectionDiv = document.createElement('div')
+	selectionDiv.className = 'screenshot-selection-box'
+	selectionDiv.style.cssText = SELECTION_STYLE
 
-	document.body.appendChild(overlay);
-	document.body.appendChild(selectionDiv);
+	document.body.appendChild(overlay)
+	document.body.appendChild(selectionDiv)
 
 	const dispose = () => {
 		if (overlay.parentNode) {
-			overlay.parentNode.removeChild(overlay);
+			overlay.parentNode.removeChild(overlay)
 		}
 		if (selectionDiv.parentNode) {
-			selectionDiv.parentNode.removeChild(selectionDiv);
+			selectionDiv.parentNode.removeChild(selectionDiv)
 		}
-	};
+	}
 
-	return { overlay, selectionDiv, dispose };
+	return { overlay, selectionDiv, dispose }
 }

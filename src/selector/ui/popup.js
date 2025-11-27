@@ -1,10 +1,10 @@
 /* SPDX-License-Identifier: MIT */
 
-import { browserAPI } from "../browserApi.js";
-import { showMessage } from "./toast.js";
+import { browserAPI } from '../browserApi.js'
+import { showMessage } from './toast.js'
 
 function createPopupShell(t, x, y) {
-	const popup = document.createElement("div");
+	const popup = document.createElement('div')
 	popup.style.cssText = `
 		position: fixed;
 		left: ${x}px;
@@ -27,7 +27,7 @@ function createPopupShell(t, x, y) {
 		backdrop-filter: blur(24px) saturate(140%);
 		border: 1px solid rgba(255, 255, 255, 0.45);
 		outline: 1px solid rgba(15, 23, 42, 0.08);
-	`;
+	`
 
 	popup.innerHTML = `
 		<div id="popup-header" style="
@@ -41,7 +41,7 @@ function createPopupShell(t, x, y) {
 			user-select: none;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 		">
-			<h3 style="margin: 0; color: #0f172a; font-size: 15px; letter-spacing: 0.02em;">${t("aiAnalysis")}</h3>
+			<h3 style="margin: 0; color: #0f172a; font-size: 15px; letter-spacing: 0.02em;">${t('aiAnalysis')}</h3>
 			<span style="font-size: 11px; color: rgba(15, 23, 42, 0.6); text-transform: uppercase; letter-spacing: 0.15em;">AI</span>
 		</div>
 		<div id="popup-content" style="
@@ -50,7 +50,7 @@ function createPopupShell(t, x, y) {
 			overflow-y: auto;
 			background: radial-gradient(circle at top, rgba(255,255,255,0.35), rgba(248,250,252,0.4));
 		">
-			<div id="ai-loading" style="color: rgba(15, 23, 42, 0.65); margin-bottom: 15px; font-size: 13px;">${t("analyzingImage")}</div>
+			<div id="ai-loading" style="color: rgba(15, 23, 42, 0.65); margin-bottom: 15px; font-size: 13px;">${t('analyzingImage')}</div>
 			<div id="ai-result" style="display: none; color: #0f172a; line-height: 1.65; margin-bottom: 15px;"></div>
 			<button id="close-ai-popup" style="
 				background: rgba(15, 23, 42, 0.85);
@@ -63,113 +63,113 @@ function createPopupShell(t, x, y) {
 				width: 100%;
 				letter-spacing: 0.03em;
 				transition: background 0.2s ease, box-shadow 0.2s ease;
-			">${t("close") || "Close"}</button>
+			">${t('close') || 'Close'}</button>
 		</div>
-	`;
+	`
 
-	document.body.appendChild(popup);
-	return popup;
+	document.body.appendChild(popup)
+	return popup
 }
 
 function setupPopupInteractions(popup) {
-	let hasBeenHovered = false;
-	let isDragging = false;
-	let offsetX = 0;
-	let offsetY = 0;
+	let hasBeenHovered = false
+	let isDragging = false
+	let offsetX = 0
+	let offsetY = 0
 
-	popup.addEventListener("mouseenter", () => {
-		popup.style.pointerEvents = "auto";
-		popup.style.opacity = "0.95";
-		popup.style.transform = "translateY(0) scale(1)";
-		popup.style.boxShadow = "0 35px 90px rgba(15,23,42,0.35)";
-	});
+	popup.addEventListener('mouseenter', () => {
+		popup.style.pointerEvents = 'auto'
+		popup.style.opacity = '0.95'
+		popup.style.transform = 'translateY(0) scale(1)'
+		popup.style.boxShadow = '0 35px 90px rgba(15,23,42,0.35)'
+	})
 
-	popup.addEventListener("mouseleave", () => {
+	popup.addEventListener('mouseleave', () => {
 		if (!hasBeenHovered) {
-			popup.style.opacity = "0.45";
-			popup.style.transform = "translateY(8px) scale(0.99)";
-			popup.style.boxShadow = "0 18px 40px rgba(15,23,42,0.25)";
-			hasBeenHovered = true;
+			popup.style.opacity = '0.45'
+			popup.style.transform = 'translateY(8px) scale(0.99)'
+			popup.style.boxShadow = '0 18px 40px rgba(15,23,42,0.25)'
+			hasBeenHovered = true
 		} else {
-			popup.style.opacity = "0";
-			popup.style.transform = "translateY(18px) scale(0.93)";
-			popup.style.boxShadow = "0 6px 16px rgba(15,23,42,0.15)";
-			popup.style.pointerEvents = "none";
+			popup.style.opacity = '0'
+			popup.style.transform = 'translateY(18px) scale(0.93)'
+			popup.style.boxShadow = '0 6px 16px rgba(15,23,42,0.15)'
+			popup.style.pointerEvents = 'none'
 			setTimeout(() => {
-				popup.style.pointerEvents = "auto";
-			}, 200);
+				popup.style.pointerEvents = 'auto'
+			}, 200)
 		}
-	});
+	})
 
-	const header = popup.querySelector("#popup-header");
+	const header = popup.querySelector('#popup-header')
 
-	header.addEventListener("mousedown", (event) => {
-		isDragging = true;
-		offsetX = event.clientX - popup.getBoundingClientRect().left;
-		offsetY = event.clientY - popup.getBoundingClientRect().top;
-		popup.style.cursor = "grabbing";
-		popup.style.transition = "none";
-	});
+	header.addEventListener('mousedown', (event) => {
+		isDragging = true
+		offsetX = event.clientX - popup.getBoundingClientRect().left
+		offsetY = event.clientY - popup.getBoundingClientRect().top
+		popup.style.cursor = 'grabbing'
+		popup.style.transition = 'none'
+	})
 
-	document.addEventListener("mousemove", (event) => {
+	document.addEventListener('mousemove', (event) => {
 		if (!isDragging) {
-			return;
+			return
 		}
 
-		event.preventDefault();
+		event.preventDefault()
 
-		let newX = event.clientX - offsetX;
-		let newY = event.clientY - offsetY;
+		let newX = event.clientX - offsetX
+		let newY = event.clientY - offsetY
 
-		const maxX = window.innerWidth - popup.offsetWidth;
-		const maxY = window.innerHeight - popup.offsetHeight;
+		const maxX = window.innerWidth - popup.offsetWidth
+		const maxY = window.innerHeight - popup.offsetHeight
 
-		newX = Math.max(0, Math.min(newX, maxX));
-		newY = Math.max(0, Math.min(newY, maxY));
+		newX = Math.max(0, Math.min(newX, maxX))
+		newY = Math.max(0, Math.min(newY, maxY))
 
-		popup.style.left = `${newX}px`;
-		popup.style.top = `${newY}px`;
-	});
+		popup.style.left = `${newX}px`
+		popup.style.top = `${newY}px`
+	})
 
-	document.addEventListener("mouseup", () => {
+	document.addEventListener('mouseup', () => {
 		if (isDragging) {
-			isDragging = false;
-			popup.style.cursor = "move";
-			popup.style.transition = "all 0.3s ease";
+			isDragging = false
+			popup.style.cursor = 'move'
+			popup.style.transition = 'all 0.3s ease'
 		}
-	});
+	})
 
-	popup.querySelector("#close-ai-popup").addEventListener("click", () => {
-		popup.remove();
-	});
+	popup.querySelector('#close-ai-popup').addEventListener('click', () => {
+		popup.remove()
+	})
 
-	const closeButton = popup.querySelector("#close-ai-popup");
-	closeButton.addEventListener("mouseenter", () => {
-		closeButton.style.background = "rgba(15, 23, 42, 0.95)";
-		closeButton.style.boxShadow = "0 10px 30px rgba(15,23,42,0.35)";
-	});
-	closeButton.addEventListener("mouseleave", () => {
-		closeButton.style.background = "rgba(15, 23, 42, 0.85)";
-		closeButton.style.boxShadow = "none";
-	});
+	const closeButton = popup.querySelector('#close-ai-popup')
+	closeButton.addEventListener('mouseenter', () => {
+		closeButton.style.background = 'rgba(15, 23, 42, 0.95)'
+		closeButton.style.boxShadow = '0 10px 30px rgba(15,23,42,0.35)'
+	})
+	closeButton.addEventListener('mouseleave', () => {
+		closeButton.style.background = 'rgba(15, 23, 42, 0.85)'
+		closeButton.style.boxShadow = 'none'
+	})
 }
 
 function sanitizeJSON(rawContent) {
-	let cleanJson = rawContent.trim();
-	if (cleanJson.startsWith("```") ) {
-		cleanJson = cleanJson.replace(/```json\n?/g, "").replace(/```\n?/g, "");
+	let cleanJson = rawContent.trim()
+	if (cleanJson.startsWith('```')) {
+		cleanJson = cleanJson.replace(/```json\n?/g, '').replace(/```\n?/g, '')
 	}
-	return cleanJson;
+	return cleanJson
 }
 
 function renderTextFallback(t, popup, rawContent) {
-	popup.querySelector("#ai-loading").style.display = "none";
-	const resultDiv = popup.querySelector("#ai-result");
-	resultDiv.style.display = "block";
+	popup.querySelector('#ai-loading').style.display = 'none'
+	const resultDiv = popup.querySelector('#ai-result')
+	resultDiv.style.display = 'block'
 	resultDiv.innerHTML = `
 		<div style="background: rgba(251, 191, 36, 0.18); border: 1px solid rgba(245, 158, 11, 0.4); padding: 14px; border-radius: 12px; margin-bottom: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);">
 			<div style="font-size: 11px; color: rgba(146, 64, 14, 0.8); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em;">
-				${t("aiTextResponseWarning")}
+				${t('aiTextResponseWarning')}
 			</div>
 		</div>
 		<div style="background: rgba(248, 250, 252, 0.35); border: 1px solid rgba(148, 163, 184, 0.45); padding: 14px; border-radius: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);">
@@ -177,13 +177,13 @@ function renderTextFallback(t, popup, rawContent) {
 				${rawContent}
 			</div>
 		</div>
-	`;
+	`
 }
 
 function renderIncompleteJSON(popup, parsedData) {
-	popup.querySelector("#ai-loading").style.display = "none";
-	const resultDiv = popup.querySelector("#ai-result");
-	resultDiv.style.display = "block";
+	popup.querySelector('#ai-loading').style.display = 'none'
+	const resultDiv = popup.querySelector('#ai-result')
+	resultDiv.style.display = 'block'
 	resultDiv.innerHTML = `
 		<div style="background: rgba(248, 113, 113, 0.2); border: 1px solid rgba(248, 113, 113, 0.4); padding: 14px; border-radius: 14px; margin-bottom: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);">
 			<div style="font-size: 11px; color: rgba(127, 29, 29, 0.85); font-weight: 600; margin-bottom: 6px; letter-spacing: 0.08em;">
@@ -195,27 +195,27 @@ function renderIncompleteJSON(popup, parsedData) {
 				${JSON.stringify(parsedData, null, 2)}
 			</div>
 		</div>
-	`;
+	`
 }
 
 function buildAnswerHTML(parsedData, t) {
-	if (parsedData.answer_type === "multi_select") {
-		let answers = [];
+	if (parsedData.answer_type === 'multi_select') {
+		let answers = []
 
 		if (Array.isArray(parsedData.answer)) {
-			answers = parsedData.answer;
-		} else if (typeof parsedData.answer === "string") {
+			answers = parsedData.answer
+		} else if (typeof parsedData.answer === 'string') {
 			try {
-				const parsed = JSON.parse(parsedData.answer);
-				answers = Array.isArray(parsed) ? parsed : [parsedData.answer];
+				const parsed = JSON.parse(parsedData.answer)
+				answers = Array.isArray(parsed) ? parsed : [parsedData.answer]
 			} catch {
 				answers = parsedData.answer
 					.split(/[;\n,]/)
 					.map((value) => value.trim())
-					.filter((value) => value.length > 0);
+					.filter((value) => value.length > 0)
 			}
 		} else {
-			answers = [String(parsedData.answer)];
+			answers = [String(parsedData.answer)]
 		}
 
 		return answers
@@ -235,9 +235,9 @@ function buildAnswerHTML(parsedData, t) {
 						<span style="color: #22c55e; font-size: 16px; flex-shrink: 0; margin-top: 1px;">✓</span>
 						<span style="color: #022c22; font-size: 13px; line-height: 1.5;">${ans}</span>
 					</div>
-				`,
+				`
 			)
-			.join("");
+			.join('')
 	}
 
 	return `
@@ -253,22 +253,22 @@ function buildAnswerHTML(parsedData, t) {
 		">
 			${parsedData.answer}
 		</div>
-	`;
+	`
 }
 
 function renderResult(popup, parsedData, t) {
-	popup.querySelector("#ai-loading").style.display = "none";
-	const resultDiv = popup.querySelector("#ai-result");
-	resultDiv.style.display = "block";
+	popup.querySelector('#ai-loading').style.display = 'none'
+	const resultDiv = popup.querySelector('#ai-result')
+	resultDiv.style.display = 'block'
 
 	const answerTypeBadge =
 		{
-			text: t("aiAnswerTypeText"),
-			select_one: t("aiAnswerTypeSelectOne"),
-			multi_select: t("aiAnswerTypeMultiSelect"),
-		}[parsedData.answer_type] || t("aiAnswerTypeUnknown");
+			text: t('aiAnswerTypeText'),
+			select_one: t('aiAnswerTypeSelectOne'),
+			multi_select: t('aiAnswerTypeMultiSelect'),
+		}[parsedData.answer_type] || t('aiAnswerTypeUnknown')
 
-	const answerHTML = buildAnswerHTML(parsedData, t);
+	const answerHTML = buildAnswerHTML(parsedData, t)
 
 	resultDiv.innerHTML = `
 		<div style="
@@ -280,7 +280,7 @@ function renderResult(popup, parsedData, t) {
 			box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 		">
 			<div style="font-size: 11px; color: rgba(3, 105, 161, 0.85); font-weight: 600; margin-bottom: 6px; letter-spacing: 0.08em; text-transform: uppercase;">
-				${t("aiQuestionLabel")}
+				${t('aiQuestionLabel')}
 			</div>
 			<div style="color: #0f172a; font-size: 13px;">
 				${parsedData.question}
@@ -298,11 +298,11 @@ function renderResult(popup, parsedData, t) {
 				display: flex;
 				align-items: center;
 				gap: 8px;
-				margin-bottom: ${parsedData.answer_type === "multi_select" ? "12px" : "8px"};
+				margin-bottom: ${parsedData.answer_type === 'multi_select' ? '12px' : '8px'};
 			">
 				<span style="font-size: 20px; color: #14532d;">✓</span>
 				<span style="font-size: 11px; color: rgba(21, 128, 61, 0.85); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">
-					${t("aiAnswerLabel")}
+					${t('aiAnswerLabel')}
 				</span>
 			</div>
 			${answerHTML}
@@ -320,121 +320,121 @@ function renderResult(popup, parsedData, t) {
 				${answerTypeBadge}
 			</div>
 		</div>
-	`;
+	`
 }
 
 export async function showAIAnalysis(imageBlob, x, y, t) {
-	let apiKey;
-	let model;
-	let aiEnabled = false;
+	let apiKey
+	let model
+	let aiEnabled = false
 	try {
 		const storageData = await new Promise((resolve) => {
-			browserAPI.storage.sync.get(["pollinationsApiKey", "selectedModel", "pollinationsModelName", "aiEnabled"], resolve);
-		});
-	apiKey = storageData?.pollinationsApiKey;
-	model = storageData?.selectedModel || storageData?.pollinationsModelName || "openai";
-	aiEnabled = !!storageData?.aiEnabled;
+			browserAPI.storage.sync.get(
+				['pollinationsApiKey', 'selectedModel', 'pollinationsModelName', 'aiEnabled'],
+				resolve
+			)
+		})
+		apiKey = storageData?.pollinationsApiKey
+		model = storageData?.selectedModel || storageData?.pollinationsModelName || 'openai'
+		aiEnabled = !!storageData?.aiEnabled
 	} catch (err) {
-		console.error("Failed to read API key or model from storage:", err);
-	model = "openai";
+		console.error('Failed to read API key or model from storage:', err)
+		model = 'openai'
 	}
 
 	if (!aiEnabled) {
-		showMessage(t("imageCopiedToClipboard"), "success");
-		return;
+		showMessage(t('imageCopiedToClipboard'), 'success')
+		return
 	}
 
-	const popup = createPopupShell(t, x, y);
-	setupPopupInteractions(popup);
+	const popup = createPopupShell(t, x, y)
+	setupPopupInteractions(popup)
 
 	try {
 		const base64Image = await new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.onloadend = () => resolve(reader.result);
-			reader.onerror = reject;
-			reader.readAsDataURL(imageBlob);
-		});
+			const reader = new FileReader()
+			reader.onloadend = () => resolve(reader.result)
+			reader.onerror = reject
+			reader.readAsDataURL(imageBlob)
+		})
 
 		if (!apiKey) {
 			try {
-				const modelsResp = await fetch("https://text.pollinations.ai/models");
+				const modelsResp = await fetch('https://text.pollinations.ai/models')
 				if (modelsResp.ok) {
-					const modelsList = await modelsResp.json();
-					const selectedModelInfo = modelsList.find((m) => m.name === model);
-					if (selectedModelInfo?.tier !== "anonymous") {
-						showMessage(t("pleaseEnterApiKey"), "error");
-						return;
+					const modelsList = await modelsResp.json()
+					const selectedModelInfo = modelsList.find((m) => m.name === model)
+					if (selectedModelInfo?.tier !== 'anonymous') {
+						showMessage(t('pleaseEnterApiKey'), 'error')
+						return
 					}
 				}
 			} catch (err) {
-				console.warn("Model check failed, proceeding without API key check:", err);
+				console.warn('Model check failed, proceeding without API key check:', err)
 			}
 		}
 
-		const response = await fetch(
-			"https://text.pollinations.ai/openai/v1/chat/completions",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
-				},
-				body: JSON.stringify({
-					model,
-					messages: [
-						{
-							role: "system",
-							content: t("aiSystemPrompt"),
-						},
-						{
-							role: "user",
-							content: [
-								{ type: "text", text: t("aiUserPrompt") },
-								{ type: "image_url", image_url: { url: base64Image } },
-							],
-						},
-					],
-				}),
+		const response = await fetch('https://text.pollinations.ai/openai/v1/chat/completions', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
 			},
-		);
+			body: JSON.stringify({
+				model,
+				messages: [
+					{
+						role: 'system',
+						content: t('aiSystemPrompt'),
+					},
+					{
+						role: 'user',
+						content: [
+							{ type: 'text', text: t('aiUserPrompt') },
+							{ type: 'image_url', image_url: { url: base64Image } },
+						],
+					},
+				],
+			}),
+		})
 
 		if (!response.ok) {
-			throw new Error(`API Error: ${response.status} ${response.statusText}`);
+			throw new Error(`API Error: ${response.status} ${response.statusText}`)
 		}
 
-		const data = await response.json();
-		const rawContent = data.choices?.[0]?.message?.content || "{}";
+		const data = await response.json()
+		const rawContent = data.choices?.[0]?.message?.content || '{}'
 
-		console.log("🔍 Raw AI Response:", rawContent);
+		console.log('🔍 Raw AI Response:', rawContent)
 
-		let parsedData;
+		let parsedData
 		try {
-			parsedData = JSON.parse(sanitizeJSON(rawContent));
+			parsedData = JSON.parse(sanitizeJSON(rawContent))
 		} catch (error) {
-			console.error("JSON Parse Error:", error);
-			console.error("Failed to parse:", rawContent);
-			return renderTextFallback(t, popup, rawContent);
+			console.error('JSON Parse Error:', error)
+			console.error('Failed to parse:', rawContent)
+			return renderTextFallback(t, popup, rawContent)
 		}
 
 		if (!parsedData.question || !parsedData.answer_type || !parsedData.answer) {
-			return renderIncompleteJSON(popup, parsedData);
+			return renderIncompleteJSON(popup, parsedData)
 		}
 
-		renderResult(popup, parsedData, t);
+		renderResult(popup, parsedData, t)
 	} catch (error) {
-		console.error("AI Analysis failed:", error);
-		popup.querySelector("#ai-loading").style.display = "none";
-		const resultDiv = popup.querySelector("#ai-result");
-		resultDiv.style.display = "block";
+		console.error('AI Analysis failed:', error)
+		popup.querySelector('#ai-loading').style.display = 'none'
+		const resultDiv = popup.querySelector('#ai-result')
+		resultDiv.style.display = 'block'
 		resultDiv.innerHTML = `
 			<div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 12px; border-radius: 6px;">
 				<div style="font-size: 11px; color: #991b1b; font-weight: 600; margin-bottom: 6px;">
-					${t("aiErrorLabel")}
+					${t('aiErrorLabel')}
 				</div>
 				<div style="color: #7f1d1d; font-size: 12px;">
 					${error.message}
 				</div>
 			</div>
-		`;
+		`
 	}
 }

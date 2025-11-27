@@ -14,76 +14,76 @@ permissions:
 jobs:
     obfuscate-and-release:
         runs-on: ubuntu-latest
-        
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
-            
+
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: '20'
-            
+
             - name: Install pnpm
               uses: pnpm/action-setup@v2
               with:
                   version: 8
-            
+
             - name: Install dependencies
               run: pnpm install
-            
+
             - name: Read version from package.json
               id: get_version
               run: |
                   VERSION=$(node -p "require('./package.json').version")
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
                   echo "📦 Package version: $VERSION"
-            
+
             - name: Build and obfuscate
               run: pnpm build:obfuscate
-            
+
             - name: Build and obfuscate Firefox version
               run: pnpm build:firefox:obfuscate
-            
+
             - name: Create ZIP package for Chrome
               run: |
                   cd dist
                   zip -r ../cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip . -x "*.DS_Store"
                   cd ..
                   echo "📦 Created: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
-            
+
             - name: Create XPI package for Firefox
               run: |
                   cd dist-firefox
                   zip -r ../cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi . -x "*.DS_Store"
                   cd ..
                   echo "📦 Created: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
-            
+
             - name: Generate release notes
               id: release_notes
               run: |
                   cat << EOF > release_notes.md
                   ## 🚀 Release ${{ steps.get_version.outputs.version }}-${{ github.run_number }}
-                  
+
                   ### 📋 Release Information
                   - **Version:** ${{ steps.get_version.outputs.version }}
                   - **Build:** ${{ github.run_number }}
                   - **Date:** $(date +'%Y-%m-%d %H:%M:%S UTC')
                   - **Commit:** ${{ github.sha }}
-                  
+
                   ### 📦 Packages
                   - **Chrome/Edge/Brave:** cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
                   - **Firefox:** cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi
-                  
+
                   ### 📝 Notes
                   ${{ github.event.inputs.release_notes }}
-                  
+
                   ---
                   *Automated release from GitHub Actions*
                   EOF
-                  
+
                   cat release_notes.md
-            
+
             - name: Create GitHub Release
               uses: softprops/action-gh-release@v1
               with:
@@ -91,16 +91,16 @@ jobs:
                   name: Release ${{ steps.get_version.outputs.version }}-${{ github.run_number }}
                   body_path: release_notes.md
                   files: |
-                    cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
-                    cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi
+                      cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
+                      cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi
                   draft: false
                   prerelease: false
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            
+
             - name: Success message
               run: |
-                echo "🎉 Release created successfully!"
-                echo "📦 Chrome Package: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
-                echo "📦 Firefox Package: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
-                echo "🏷️  Tag: v${{ steps.get_version.outputs.version }}-${{ github.run_number }}"
+                  echo "🎉 Release created successfully!"
+                  echo "📦 Chrome Package: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
+                  echo "📦 Firefox Package: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
+                  echo "🏷️  Tag: v${{ steps.get_version.outputs.version }}-${{ github.run_number }}"

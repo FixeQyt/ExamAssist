@@ -1,6 +1,6 @@
 packages:
-  - '.'
+    - '.'
 
 onlyBuiltDependencies:
-  - esbuild
-  - javascript-obfuscator
+    - esbuild
+    - javascript-obfuscator

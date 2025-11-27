@@ -1,82 +1,82 @@
 /* SPDX-License-Identifier: MIT */
 
-import plTranslations from "../locales/pl.json";
-import enTranslations from "../locales/en.json";
-import { TRANSLATIONS_KEY } from "./constants.js";
+import plTranslations from '../locales/pl.json'
+import enTranslations from '../locales/en.json'
+import { TRANSLATIONS_KEY } from './constants.js'
 
-export const DEFAULT_LANGUAGE = "en";
+export const DEFAULT_LANGUAGE = 'en'
 
 const i18nResources = {
 	pl: plTranslations,
 	en: enTranslations,
-};
+}
 
-let currentLanguage = DEFAULT_LANGUAGE;
+let currentLanguage = DEFAULT_LANGUAGE
 
 function resolveLanguage(lang) {
-	return i18nResources[lang] ? lang : DEFAULT_LANGUAGE;
+	return i18nResources[lang] ? lang : DEFAULT_LANGUAGE
 }
 
 export function translate(key, lang = currentLanguage) {
-	const pack = getTranslationsFor(lang);
-	return pack?.[key] ?? i18nResources[DEFAULT_LANGUAGE][key] ?? key;
+	const pack = getTranslationsFor(lang)
+	return pack?.[key] ?? i18nResources[DEFAULT_LANGUAGE][key] ?? key
 }
 
 export function getTranslationsFor(lang = currentLanguage) {
-	const resolved = resolveLanguage(lang);
-	return i18nResources[resolved];
+	const resolved = resolveLanguage(lang)
+	return i18nResources[resolved]
 }
 
 export async function initLanguage(browserAPI) {
 	try {
 		const result = await new Promise((resolve) => {
-			browserAPI.storage.sync.get(["language"], resolve);
-		});
+			browserAPI.storage.sync.get(['language'], resolve)
+		})
 		if (result?.language) {
-			currentLanguage = resolveLanguage(result.language);
+			currentLanguage = resolveLanguage(result.language)
 		}
 	} catch (error) {
-		console.error("Failed to initialize language", error);
+		console.error('Failed to initialize language', error)
 	}
-	return currentLanguage;
+	return currentLanguage
 }
 
 export function setLanguage(lang) {
-	currentLanguage = resolveLanguage(lang);
+	currentLanguage = resolveLanguage(lang)
 }
 
 function getWindowObject() {
-	return typeof window === "undefined" ? undefined : window;
+	return typeof window === 'undefined' ? undefined : window
 }
 
 export function getTranslations() {
-	const win = getWindowObject();
+	const win = getWindowObject()
 	if (!win) {
-		return {};
+		return {}
 	}
-	return win[TRANSLATIONS_KEY] || {};
+	return win[TRANSLATIONS_KEY] || {}
 }
 
 export function consumeTranslations() {
-	const win = getWindowObject();
+	const win = getWindowObject()
 	if (!win) {
-		return getTranslationsFor();
+		return getTranslationsFor()
 	}
-	const current = win[TRANSLATIONS_KEY] || {};
-	delete win[TRANSLATIONS_KEY];
-	return current;
+	const current = win[TRANSLATIONS_KEY] || {}
+	delete win[TRANSLATIONS_KEY]
+	return current
 }
 
 export function assignTranslations(translations) {
-	const win = getWindowObject();
+	const win = getWindowObject()
 	if (!win) {
-		return;
+		return
 	}
-	win[TRANSLATIONS_KEY] = translations;
+	win[TRANSLATIONS_KEY] = translations
 }
 
 export function createTranslator(translations = getTranslations()) {
-	return (key) => translations?.[key] || key;
+	return (key) => translations?.[key] || key
 }
 
-export { i18nResources };
+export { i18nResources }

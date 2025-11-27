@@ -1,23 +1,20 @@
 window.addEventListener(
-	"error",
+	'error',
 	(e) => {
-		e.preventDefault();
-		e.stopPropagation();
-		e.stopImmediatePropagation();
-		return true;
+		e.preventDefault()
+		e.stopPropagation()
+		e.stopImmediatePropagation()
+		return true
 	},
-	true,
-);
+	true
+)
 
-Object.defineProperty(document, "hasFocus", {
+Object.defineProperty(document, 'hasFocus', {
 	get: () => {
-		throw new ReferenceError("FixeQ was here");
+		throw new ReferenceError('FixeQ was here')
 	},
-});
+})
 
-window.logToServer = () => false;
+window.logToServer = () => false
 
-console.log(
-	"%c[Bypass] ✓ Injected in MAIN world",
-	"color: #4CAF50; font-weight: bold",
-);
+console.log('%c[Bypass] ✓ Injected in MAIN world', 'color: #4CAF50; font-weight: bold')
