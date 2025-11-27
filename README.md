@@ -88,6 +88,8 @@ By default, AI features are turned off to keep the extension discreet and minima
 
 If you want AI to be enabled automatically on install, you can toggle it on in the Options page after installing the extension.
 
+Note: Not all AI models require an API key - some models are public/anonymous and can be used without a key. When you select a model in the Options page, the UI will display the model's tier; models with the "seed" tier require an API key while others may not.
+
 ### Language Selection
 
 The extension supports full internationalization (i18n):
