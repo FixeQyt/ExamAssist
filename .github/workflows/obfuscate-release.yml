@@ -52,12 +52,12 @@ jobs:
                   cd ..
                   echo "📦 Created: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
 
-            - name: Create XPI package for Firefox
-              run: |
-                  cd dist-firefox
-                  zip -r ../cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi . -x "*.DS_Store"
-                  cd ..
-                  echo "📦 Created: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
+#            - name: Create XPI package for Firefox
+#              run: |
+#                  cd dist-firefox
+#                  zip -r ../cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi . -x "*.DS_Store"
+#                  cd ..
+#                  echo "📦 Created: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
 
             - name: Generate release notes
               id: release_notes
@@ -73,7 +73,6 @@ jobs:
 
                   ### 📦 Packages
                   - **Chrome/Edge/Brave:** cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip
-                  - **Firefox:** cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi
 
                   ### 📝 Notes
                   ${{ github.event.inputs.release_notes }}
@@ -102,5 +101,4 @@ jobs:
               run: |
                   echo "🎉 Release created successfully!"
                   echo "📦 Chrome Package: cbgc-chrome-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.zip"
-                  echo "📦 Firefox Package: cbgc-firefox-${{ steps.get_version.outputs.version }}-${{ github.run_number }}.xpi"
                   echo "🏷️  Tag: v${{ steps.get_version.outputs.version }}-${{ github.run_number }}"
