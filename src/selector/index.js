@@ -85,6 +85,9 @@ function bootstrapSelector() {
 		overlay.removeEventListener('mousedown', onMouseDown)
 		overlay.removeEventListener('mousemove', onMouseMove)
 		overlay.removeEventListener('mouseup', onMouseUp)
+		document.removeEventListener('mousedown', onMouseDown, true)
+		document.removeEventListener('mousemove', onMouseMove, true)
+		document.removeEventListener('mouseup', onMouseUp, true)
 		document.removeEventListener('keydown', onKeyDown)
 
 		dispose()
@@ -94,6 +97,9 @@ function bootstrapSelector() {
 	overlay.addEventListener('mousedown', onMouseDown)
 	overlay.addEventListener('mousemove', onMouseMove)
 	overlay.addEventListener('mouseup', onMouseUp)
+	document.addEventListener('mousedown', onMouseDown, true)
+	document.addEventListener('mousemove', onMouseMove, true)
+	document.addEventListener('mouseup', onMouseUp, true)
 	document.addEventListener('keydown', onKeyDown)
 }
 
