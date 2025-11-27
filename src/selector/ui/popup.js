@@ -256,11 +256,7 @@ function buildAnswerHTML(parsedData, t) {
 	`
 }
 
-function renderResult(popup, parsedData, t) {
-	popup.querySelector('#ai-loading').style.display = 'none'
-	const resultDiv = popup.querySelector('#ai-result')
-	resultDiv.style.display = 'block'
-
+function renderResultItem(parsedData, t, index = null) {
 	const answerTypeBadge =
 		{
 			text: t('aiAnswerTypeText'),
@@ -270,57 +266,72 @@ function renderResult(popup, parsedData, t) {
 
 	const answerHTML = buildAnswerHTML(parsedData, t)
 
-	resultDiv.innerHTML = `
-		<div style="
-			background: rgba(14, 165, 233, 0.16);
-			border: 1px solid rgba(14, 165, 233, 0.35);
-			padding: 16px;
-			border-radius: 16px;
-			margin-bottom: 12px;
-			box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-		">
-			<div style="font-size: 11px; color: rgba(3, 105, 161, 0.85); font-weight: 600; margin-bottom: 6px; letter-spacing: 0.08em; text-transform: uppercase;">
-				${t('aiQuestionLabel')}
-			</div>
-			<div style="color: #0f172a; font-size: 13px;">
-				${parsedData.question}
-			</div>
-		</div>
-		<div style="
-			background: rgba(34, 197, 94, 0.18);
-			border: 1px solid rgba(34, 197, 94, 0.35);
-			padding: 16px;
-			border-radius: 18px;
-			margin-bottom: 10px;
-			box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-		">
+	return `
+		<div style="margin-bottom: 10px;">
 			<div style="
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				margin-bottom: ${parsedData.answer_type === 'multi_select' ? '12px' : '8px'};
+				background: rgba(14, 165, 233, 0.16);
+				border: 1px solid rgba(14, 165, 233, 0.35);
+				padding: 16px;
+				border-radius: 16px;
+				margin-bottom: 12px;
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 			">
-				<span style="font-size: 20px; color: #14532d;">✓</span>
-				<span style="font-size: 11px; color: rgba(21, 128, 61, 0.85); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">
-					${t('aiAnswerLabel')}
-				</span>
+				<div style="font-size: 11px; color: rgba(3, 105, 161, 0.85); font-weight: 600; margin-bottom: 6px; letter-spacing: 0.08em; text-transform: uppercase;">
+					${t('aiQuestionLabel')}${index !== null ? ` ${index + 1}` : ''}
+				</div>
+				<div style="color: #0f172a; font-size: 13px;">
+					${parsedData.question}
+				</div>
 			</div>
-			${answerHTML}
 			<div style="
-				display: inline-block;
-				background: rgba(15, 23, 42, 0.1);
-				color: #064e3b;
-				padding: 5px 12px;
-				border-radius: 999px;
-				font-size: 11px;
-				font-weight: 500;
-				margin-top: 8px;
-				border: 1px solid rgba(15, 23, 42, 0.12);
+				background: rgba(34, 197, 94, 0.18);
+				border: 1px solid rgba(34, 197, 94, 0.35);
+				padding: 16px;
+				border-radius: 18px;
+				margin-bottom: 10px;
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 			">
-				${answerTypeBadge}
+				<div style="
+					display: flex;
+					align-items: center;
+					gap: 8px;
+					margin-bottom: ${parsedData.answer_type === 'multi_select' ? '12px' : '8px'};
+				">
+					<span style="font-size: 20px; color: #14532d;">✓</span>
+					<span style="font-size: 11px; color: rgba(21, 128, 61, 0.85); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">
+						${t('aiAnswerLabel')}
+					</span>
+				</div>
+				${answerHTML}
+				<div style="
+					display: inline-block;
+					background: rgba(15, 23, 42, 0.1);
+					color: #064e3b;
+					padding: 5px 12px;
+					border-radius: 999px;
+					font-size: 11px;
+					font-weight: 500;
+					margin-top: 8px;
+					border: 1px solid rgba(15, 23, 42, 0.12);
+				">
+					${answerTypeBadge}
+				</div>
 			</div>
 		</div>
 	`
+}
+
+function renderResults(popup, parsedList, t) {
+	popup.querySelector('#ai-loading').style.display = 'none'
+	const resultDiv = popup.querySelector('#ai-result')
+	resultDiv.style.display = 'block'
+
+	// Build HTML for all items
+	const html = parsedList
+		.map((item, i) => renderResultItem(item, t, parsedList.length > 1 ? i : null))
+		.join('')
+
+	resultDiv.innerHTML = html
 }
 
 export async function showAIAnalysis(imageBlob, x, y, t) {
@@ -416,11 +427,20 @@ export async function showAIAnalysis(imageBlob, x, y, t) {
 			return renderTextFallback(t, popup, rawContent)
 		}
 
-		if (!parsedData.question || !parsedData.answer_type || !parsedData.answer) {
+		// Support both single object and array of objects returned by the AI
+		const parsedList = Array.isArray(parsedData) ? parsedData : [parsedData]
+
+		// Validate every parsed item
+		const invalid = parsedList.some((item) => {
+			return !item || !item.question || !item.answer_type || (item.answer === undefined || item.answer === null)
+		})
+
+		if (invalid) {
 			return renderIncompleteJSON(popup, parsedData)
 		}
 
-		renderResult(popup, parsedData, t)
+		// Render one or many results
+		renderResults(popup, parsedList, t)
 	} catch (error) {
 		console.error('AI Analysis failed:', error)
 		popup.querySelector('#ai-loading').style.display = 'none'
