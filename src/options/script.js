@@ -1,6 +1,6 @@
 import i18next from "i18next";
-import plTranslations from "./locales/pl.json";
-import enTranslations from "./locales/en.json";
+import plTranslations from "../locales/pl.json";
+import enTranslations from "../locales/en.json";
 
 // Cross-browser compatibility
 const browserAPI = typeof browser !== 'undefined' ? browser : chrome;

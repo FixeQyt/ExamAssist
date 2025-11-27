@@ -324,21 +324,25 @@ function renderResult(popup, parsedData, t) {
 }
 
 export async function showAIAnalysis(imageBlob, x, y, t) {
-	const popup = createPopupShell(t, x, y);
-	setupPopupInteractions(popup);
-
+	let apiKey;
 	try {
 		const storageData = await new Promise((resolve) => {
 			browserAPI.storage.sync.get(["pollinationsApiKey"], resolve);
 		});
+		apiKey = storageData?.pollinationsApiKey;
+	} catch (err) {
+		console.error("Failed to read API key from storage:", err);
+	}
 
-		const apiKey = storageData?.pollinationsApiKey;
-		if (!apiKey) {
-			popup.remove();
-			showMessage(t("imageCopiedToClipboard"), "success");
-			return;
-		}
+	if (!apiKey) {
+		showMessage(t("imageCopiedToClipboard"), "success");
+		return;
+	}
 
+	const popup = createPopupShell(t, x, y);
+	setupPopupInteractions(popup);
+
+	try {
 		const base64Image = await new Promise((resolve, reject) => {
 			const reader = new FileReader();
 			reader.onloadend = () => resolve(reader.result);
