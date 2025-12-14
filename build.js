@@ -192,7 +192,7 @@ const manifest = {
 if (isFirefox) {
 	manifest.browser_specific_settings = {
 		gecko: {
-			id: 'screenshot-selector@fixeqyt.github.io',
+			id: 'screenshot-selector@fixeq.me',
 			strict_min_version: '109.0',
 		},
 	}

@@ -33,8 +33,8 @@ ExamAssist is a Chrome extension that allows you to:
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/FixeQyt/ai-cheat.git
-cd ai-cheat
+git clone https://github.com/FixeQD/ExamAssist.git
+cd ExamAssist
 ```
 
 2. **Install dependencies**
